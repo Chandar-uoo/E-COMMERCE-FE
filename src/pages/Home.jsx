@@ -1,0 +1,36 @@
+import React from 'react';
+import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
+import Banner from '../components/Banner';
+import ProductList from '../components/ProductList';
+
+const Home = () => {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <header className='fixed top-0 left-0 w-full z-50  shadow'>
+        <NavBar/>
+      </header>
+
+      <main className="flex-grow min-h-[2000px] bg-white">
+        <Banner/>
+        <ProductList/>
+        {/*
+          home fetch all
+          nav icon cart userFeature search
+          search searchproduct
+          userFeature all 
+          Cart all 
+          my order page
+          solo product
+          order
+        */}
+      </main>
+
+      <footer>
+        <Footer />
+      </footer>
+    </div>
+  );
+};
+
+export default Home;

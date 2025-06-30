@@ -1,11 +1,15 @@
 
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../Store/Slices/CartThunk';
+import { useDispatch } from 'react-redux';
+
 const ProductCard = ({ product }) => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
   const veiwProduct = async (id) => {
     try {
-      nav(`/product/${id}`);
+      nav(`/products/${id}`);
     } catch (err) {
       console.log(err.message);
     }
@@ -25,7 +29,7 @@ const ProductCard = ({ product }) => {
       </h3>
       <p className="text-sm text-gray-600 mb-1">₹{product.price}</p>
       <p className="text-sm text-yellow-500 mb-2">⭐ {product.rating}</p>
-      <button className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition">
+      <button onClick={()=>dispatch(addToCart({ productId: product._id }))} className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition">
         Add to Cart
       </button>
     </div>

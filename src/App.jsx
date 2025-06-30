@@ -7,6 +7,9 @@ import Product from './pages/Product'
 import MyOrders from './pages/MyOrders'
 import Cart from './pages/Cart'
 import Transaction from './pages/Transaction'
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Search from './pages/Search';
 const App = () => {
   return (
     <div>
@@ -14,10 +17,13 @@ const App = () => {
      <BrowserRouter>
       <Routes>
      <Route path="/" element={<Home/>}/>
-     <Route path="/product/:id" element ={<Product/>}/>
+     <Route path="/products/:id" element ={<Product/>}/>
      <Route path="/myOrders" element = {<MyOrders/>}/>
      <Route path="/cart" element={<Cart/>}/>
-     <Route path="/product/:id/payment" element={<Transaction/>}/>
+     <Route path="/login" element={<Login/>}/>
+     <Route path="/signup" element={<SignUp/>}/>
+     <Route path = '/search-results' element={<Search/>}/>
+     <Route path="/product/payment/:id" element={<Transaction/>}/>
       </Routes>
       </BrowserRouter>
     </div>

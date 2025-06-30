@@ -1,12 +1,29 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../Store/Slices/CartThunk';
+import { orderMaking } from '../Store/Slices/OrderThunk';
+
 
 const Product = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const AllProduct = useSelector((state) => state.product.value);
   const product = AllProduct.find((item) => item._id === id);
-
+  const nav = useNavigate();
+  const process = async () => {
+    const resultAction = await dispatch(orderMaking({ _id: id }));
+  
+    if (orderMaking.fulfilled.match(resultAction)) {
+  
+      nav(`/product/payment/${id}`);
+    } else {
+      
+      console.error("Order creation failed:", resultAction.payload || resultAction.error);
+    }
+  };
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center text-xl text-gray-700">
@@ -59,10 +76,10 @@ const Product = () => {
           </div>
 
           <div className="text-center">
-            <button className="px-12 py-4 bg-indigo-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-indigo-600 transition">
+            <button onClick={()=>dispatch(addToCart({productId:product._id}))} className="px-12 py-4 bg-indigo-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-indigo-600 transition">
               Add to Cart
             </button>
-            <button className="px-12 py-4 bg-green-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-green-600 transition ml-4">
+            <button  onClick={process} className="px-12 py-4 bg-green-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-green-600 transition ml-4">
               Buy Now
             </button>
           </div>

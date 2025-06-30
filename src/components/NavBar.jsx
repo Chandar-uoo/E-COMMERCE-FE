@@ -1,64 +1,91 @@
-import React from 'react'
+import React ,{useState}from 'react';
 import { TiShoppingCart } from "react-icons/ti";
 import { FaTruck } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axiosInstance from '../api/axiosInstance';
+
 const NavBar = () => {
+  const user = useSelector((state) => state.user.user);
+  const [text, settext] = useState('');
+  const nav = useNavigate();
+   const searchItem = async ()=>{
+    try {
+        const res = await axiosInstance.get(`/products/search-product?q=${text}`,{withCredentials:true});
+        const data = res.data.result;
+        nav('/search-results',{state:{products:data}})
+    } catch (err) {
+        console.log(err);
+        
+    }
+}
+
   return (
-    <div className="navbar bg-base-300 shadow-sm px-4">
+    <div className="navbar bg-neutral text-white shadow-sm px-6 py-2">
+      {/* Brand */}
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <Link to="/" className="btn btn-ghost text-xl text-white">
+          DaisyUI
+        </Link>
       </div>
 
+      {/* Right Section */}
       <div className="flex-none flex items-center gap-4">
-        {/* Search Input with Icon */}
+        {/* Search Box */}
         <div className="relative">
           <input
+          value={text}
+          onChange={(e)=>settext(e.target.value)}
             type="text"
             placeholder="Search"
-            className="pl-10 pr-4 py-2 text-black bg-white border-2 border-black rounded-md w-48 hover:border-cyan-300 focus:outline-none"
+            className="pl-10 pr-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md w-48 focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
           />
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-            <CiSearch className="w-5 h-5" />
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <button><CiSearch onClick={searchItem} className="w-6  h-8 text-white" /></button>
           </div>
         </div>
 
-        {/* Truck Icon */}
+        {/* Orders Icon */}
         <Link to="/myOrders" className="btn btn-ghost btn-circle hover:border-white">
-          <FaTruck className="h-5 w-5" />
+          <FaTruck className="h-6 w-6 text-white" />
         </Link>
 
-        {/* Shopping Cart Dropdown */}
-        <div >
-          <div tabIndex={0}  role="button" className="btn btn-ghost btn-circle hover:border-white">
-          <Link to="/cart"className="indicator">
-          <TiShoppingCart className="h-5 w-5" /></Link>
-          </div>
-          
-        </div>
+        {/* Cart Icon */}
+        <Link to="/cart" className="btn btn-ghost btn-circle hover:border-white">
+          <TiShoppingCart className="h-6 w-6 text-white" />
+        </Link>
 
-        {/* Avatar Dropdown */}
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar hover:border-white">
-            <div className="w-10 rounded-full">
+        {/* User Dropdown */}
+        <div className="dropdown dropdown-end flex items-center gap-2">
+          {/* Name */}
+          {user?.name && (
+            <div className="font-semibold text-white hidden sm:block">{user.name}</div>
+          )}
+
+          {/* Avatar */}
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+            <div className="w-10 rounded-full ring ring-cyan-400 ring-offset-base-100 ring-offset-2">
               <img
                 alt="User avatar"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                src={user?.image || "https://via.placeholder.com/150"}
               />
             </div>
           </div>
+
+          {/* Dropdown Menu */}
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-gray-900 rounded-box w-52 text-white"
           >
             <li>
-              <a className="justify-between">
+              <a className="justify-between hover:bg-gray-800 rounded">
                 Profile
-                <span className="badge">New</span>
+                <span className="badge badge-accent">New</span>
               </a>
             </li>
-            <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
+            <li><a className="hover:bg-gray-800 rounded">Settings</a></li>
+            <li><a className="hover:bg-gray-800 rounded">Logout</a></li>
           </ul>
         </div>
       </div>

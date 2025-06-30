@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../Store/Slices/CartThunk';
-import { orderMaking } from '../Store/Slices/OrderThunk';
+import { addToCart } from '../store/Slices/CartThunk';
+import { orderMaking } from '../store/Slices/OrderThunk';
 
 
 const Product = () => {

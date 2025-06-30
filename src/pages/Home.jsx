@@ -3,15 +3,15 @@ import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Banner from '../components/Banner';
 import ProductList from '../components/ProductList';
-import { Add } from '../Store/Slices/ProductSlice'
+import { Add } from '../store/Slices/ProductSlice'
 import { useDispatch, useSelector } from 'react-redux';
-import { adduser } from '../Store/Slices/UserSlice';
+import { adduser } from '../store/Slices/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 
 
 const Home = () => {
- 
+
   const dispatch = useDispatch();
   const nav = useNavigate();
   const user = useSelector((state) => state.user.user);
@@ -53,22 +53,13 @@ const Home = () => {
     }
     result();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products<0]);
+  }, [products < 0]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className='fixed top-0 left-0 w-full z-50  shadow'>
-        <NavBar />
-      </header>
-
-      <main className="flex-grow min-h-[2000px] bg-white">
-        <Banner />
-        <ProductList products={products} />
-      </main>
-      <footer>
-        <Footer />
-      </footer>
-    </div>
+    <>
+      <Banner />
+      <ProductList products={products} />
+    </>
   );
 };
 

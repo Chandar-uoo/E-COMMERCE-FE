@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { adduser } from "../Store/Slices/UserSlice";
+import { adduser } from "../store/Slices/UserSlice";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../api/axiosInstance";
 

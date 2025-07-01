@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { adduser } from '../store/Slices/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
-
+import { getAllProducts } from '../api/productService';
 
 const Home = () => {
 
@@ -44,12 +44,8 @@ const Home = () => {
   // product fetching 
   useEffect(() => {
     const result = async () => {
-      try {
-        const res = await axiosInstance.get("/products/", { withCredentials: true });
-        dispatch(Add(res.data.result));
-      } catch (err) {
-        console.log(err.message);
-      }
+      const res = await getAllProducts();
+      dispatch(Add(res));
     }
     result();
     // eslint-disable-next-line react-hooks/exhaustive-deps

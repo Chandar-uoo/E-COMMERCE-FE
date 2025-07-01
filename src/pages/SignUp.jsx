@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { adduser } from "../store/Slices/UserSlice";
 import { useDispatch } from "react-redux";
-import axiosInstance from "../api/axiosInstance";
+import { signupService } from "../api/userService";
 
 
 const SignUp = () => {
@@ -29,15 +29,9 @@ const SignUp = () => {
   // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting:', formData);
-    try {
-      const res = await axiosInstance.post('/auth/signup', formData, { withCredentials: true });
-      dispatch(adduser(res.data.result));
+      const res = await signupService(formData);
+      dispatch(adduser(res));
       nav('/')
-    } catch (err) {
-      console.log(err);
-
-    }
   };
 
   return (

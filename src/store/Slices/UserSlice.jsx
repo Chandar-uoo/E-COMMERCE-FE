@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addToCart, updateToCart,deleteFromCart } from "./CartThunk";
+import { addToCart, updateToCart,deleteFromCart } from "../thunk/CartThunk";
 
 const initialState = {
     user : null,

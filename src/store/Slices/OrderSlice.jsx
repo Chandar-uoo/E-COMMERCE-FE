@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { orderMaking, orderpayment } from "./OrderThunk";
+import { orderMaking, orderpayment } from "../thunk/OrderThunk";
 
 const initialState ={
     order :[],

@@ -1,6 +1,6 @@
 import React ,{useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { orderpayment } from '../store/Slices/OrderThunk';
+import { orderpayment } from '../store/thunk/OrderThunk';
 import { useNavigate } from 'react-router-dom';
 
 const Transaction = () => {

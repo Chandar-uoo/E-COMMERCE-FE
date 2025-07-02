@@ -1,19 +1,12 @@
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../../api/axiosInstance";
+import { addToCartService, deleteCartService, updateCartService } from "../../api/cartServices";
 
 
 export const addToCart = createAsyncThunk(
   "user/addToCart",
   async ({ productId }, { getState, rejectWithValue }) => {
     try {
-      const res = await axiosInstance.post(
-        `/cart/add/${productId}`,
-        {},
-        { withCredentials: true }
-      );
-
-      const result = res.data.result;
+      const result = await addToCartService(productId);
       const currentCart = getState().user.user.cart;
       const updatedCart = [...currentCart];
 
@@ -47,8 +40,7 @@ export const addToCart = createAsyncThunk(
 );
 export const updateToCart = createAsyncThunk("updatecart/cart", async ({ productId, quantity }, { getState, rejectWithValue }) => {
   try {
-    const res = await axiosInstance.patch(`/cart/update/${productId}`, { quantity }, { withCredentials: true });
-    const data = res.data.result;
+    const data = await updateCartService(productId, quantity);
     const userCart = getState().user.user.cart;
     const updation = userCart.map(item => {
       if (item._id == data._id) {
@@ -68,11 +60,7 @@ export const deleteFromCart = createAsyncThunk(
   "user/deleteFromCart",
   async (productId, { getState, rejectWithValue }) => {
     try {
-      const res = await axiosInstance.delete(`/cart/delete/${productId}`, {
-        withCredentials: true,
-      });
-
-      const result = res.data.result;
+      const result = await deleteCartService(productId);
 
       // Get current cart from state
       const currentCart = getState().user.user.cart;

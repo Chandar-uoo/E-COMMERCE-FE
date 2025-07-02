@@ -1,12 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../../api/axiosInstance";
+import {  orderMakeService, orderpaymentService } from "../../api/orderServices";
 
 
 export const orderMaking = createAsyncThunk('order/making',async ({_id},{getState,rejectWithValue}) => {
     try {
-        const res = await axiosInstance.post(`/order/process/${_id}`,{},
-            { withCredentials: true });
-            const {result, orderId} = res.data;
+            const {result, orderId} = await orderMakeService(_id);
             const currentorders =  getState().order.order;
             const updatedorders = [...currentorders];
             if (typeof result === "object" && result !== null) {
@@ -19,14 +17,13 @@ export const orderMaking = createAsyncThunk('order/making',async ({_id},{getStat
               return { uniqueorders,orderId};
 
     } catch (err) {
-        rejectWithValue(err.message)
+       return  rejectWithValue(err.message);
     }
     
 })
 export const orderpayment = createAsyncThunk('order/payment',async ({orderId,paymentMethod},{getState,rejectWithValue}) => { 
     try {
-        const res = await axiosInstance.patch('/order/payment/sucess',{orderId,payMethod:paymentMethod},{withCredentials:true});
-        const data = res.data.result;
+        const data = await orderpaymentService(orderId,paymentMethod);
         const currentorder = getState().order.order;
         const updatedorders = [...currentorder];
         if( typeof data === "object" && data != null){
@@ -42,7 +39,6 @@ export const orderpayment = createAsyncThunk('order/payment',async ({orderId,pay
           return uniqueorders;
     } catch (err) {
         console.log(err);
-        rejectWithValue(err.message)
-        
+        rejectWithValue(err.message);
     }  
 })

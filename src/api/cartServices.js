@@ -1,0 +1,16 @@
+import axiosInstance from "./axiosInstance";
+
+export const addToCartService = async (productId) => {
+    const res = await axiosInstance.post(`/cart/add/${productId}`);
+    return res.data.result;
+}
+
+export const updateCartService = async (productId,quantity) => {
+    const res = await axiosInstance.patch(`/cart/update/${productId}`, { quantity });
+    return res.data.result;
+}
+
+export const deleteCartService =  async (productId) => {
+    const res = await axiosInstance.delete(`/cart/delete/${productId}`);
+      return res.data.result;
+}

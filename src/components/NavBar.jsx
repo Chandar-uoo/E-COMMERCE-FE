@@ -5,6 +5,8 @@ import { CiSearch } from "react-icons/ci";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { searchService } from '../api/productService';
+import { logoutService } from '../api/userService';
+
 
 const NavBar = () => {
   const user = useSelector((state) => state.user.user);
@@ -13,6 +15,12 @@ const NavBar = () => {
   const searchItem = async () => {
     const res = await searchService(text)
     nav('/search-results', { state: { products: res } })
+  }
+
+  const logout = async () => {
+    const res = await logoutService();
+    alert(res);
+    nav("/login")
   }
 
   return (
@@ -79,7 +87,7 @@ const NavBar = () => {
               </a>
             </li>
             <li><a className="hover:bg-gray-800 rounded">Settings</a></li>
-            <li><a className="hover:bg-gray-800 rounded">Logout</a></li>
+            <li><a className="hover:bg-gray-800 rounded" onClick={logout}>Logout</a></li>
           </ul>
         </div>
       </div>

@@ -1,17 +1,18 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom';
+import EmptyState from '../components/EmptyState';
 
 
 const Search = () => {
     const location = useLocation();
-    const {products=[]} = location.state|| {};
+    const {products = []} = location.state|| {};
 
   return (
     <div className="p-4">
     <h2 className="text-2xl font-semibold mb-4">Product List</h2>
 
     {products.length === 0 ? (
-      <p className="text-gray-500">No products found.</p>
+      <EmptyState message={"No products found"}/>
     ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product) => (

@@ -10,7 +10,8 @@ const Transaction = () => {
    const order = useSelector((state)=>state.order.order);
   const currorder = order.find((item)=>item._id == orderId); 
   const nav = useNavigate();
-  const handlePayment = async () => {
+  const errorResult =  useSelector((state)=>state.order.error);
+    const handlePayment = async () => {
    try {
     if (!paymentMethod) {
       alert('Please select a payment method');
@@ -23,6 +24,7 @@ const Transaction = () => {
     }
    } catch (err) {
     console.log(err);
+    return <ErrorMessage error={errorResult}/>
     
    }
     

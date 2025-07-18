@@ -25,7 +25,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path='/search-results' element={<Search />} />
-            <Route path="/product/payment/:id" element={<Transaction />} />
+            <Route path="/product/payment" element={<Transaction />} />
           </Route>
         </Routes>
       </BrowserRouter>

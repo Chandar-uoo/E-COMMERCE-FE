@@ -14,7 +14,13 @@ const Login = () => {
         const res = await loginService(email, password);
         dispatch(adduser(res.result));
         dispatch(setAccessToken(res.accessToken));
+        console.log(res.result.role )
+       if(res.result.role === "admin"){
+        nav("/admin/home")
+       }else{
+        console.log("hi")
         nav('/')
+       }
     };  
    // signup
     const navtosignup = () => {

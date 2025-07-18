@@ -11,6 +11,8 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Search from './pages/Search';
 import Layout from './components/Layout';
+import AdminHomePage from './admin/pages/AdminHomePage';
+import AdminLayout from './admin/layout/AdminLayout';
 const App = () => {
   return (
     <div>
@@ -26,6 +28,10 @@ const App = () => {
             <Route path="/signup" element={<SignUp />} />
             <Route path='/search-results' element={<Search />} />
             <Route path="/product/payment" element={<Transaction />} />
+            // admin routes
+          </Route>
+          <Route path="/admin/*" element={<AdminLayout/>} >
+          <Route path = "home" element = {<AdminHomePage/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

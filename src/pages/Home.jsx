@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Banner from '../components/Banner';
@@ -9,16 +9,14 @@ import { adduser } from '../store/Slices/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import { getAllProducts } from '../api/productService';
+import Loader from '../components/Loader';
 
 const Home = () => {
-
+  const [Error, setError] = useState(null);
   const dispatch = useDispatch();
   const nav = useNavigate();
   const user = useSelector((state) => state.user.user);
   const products = useSelector((state) => state.product.value);
-
-
-
   // checking user is login or make request
   useEffect(() => {
     const fetchuser = async () => {
@@ -44,16 +42,25 @@ const Home = () => {
   // product fetching 
   useEffect(() => {
     const result = async () => {
-      const res = await getAllProducts();
-      dispatch(Add(res));
+      try {
+        setError(null);
+        const res = await getAllProducts();
+        dispatch(Add(res));
+      } catch (error) {
+        setError(error.messsage);
+        console.log(error);
+
+      }
     }
     result();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products < 0]);
 
+  if (products == 0) return <Loader />;
+  if (Error) return <ErrorMessage error={Error} />
   return (
     <>
-      <Banner />
+      <Banner/>
       <ProductList products={products} />
     </>
   );

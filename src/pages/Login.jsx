@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { adduser } from '../store/Slices/UserSlice';
+import { adduser,setAccessToken} from '../store/Slices/UserSlice';
 import { loginService } from '../api/userService';
 
 const Login = () => {
@@ -9,15 +9,17 @@ const Login = () => {
     const [password, setpassword] = useState("");
     const dispatch = useDispatch()
     const nav = useNavigate();
+
     const loginuser = async () => {
         const res = await loginService(email, password);
-        dispatch(adduser(res));
+        dispatch(adduser(res.result));
+        dispatch(setAccessToken(res.accessToken));
         nav('/')
-    };
-    // signup
+    };  
+   // signup
     const navtosignup = () => {
         nav('/signup')
-    };
+    };   
     return (
         <div>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">

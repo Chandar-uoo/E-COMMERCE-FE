@@ -1,67 +1,103 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteFromCart, updateToCart } from '../store/thunk/CartThunk';
+import React from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateToCart,deleteFromCart } from "../store/thunk/CartThunk";
+import { Plus, Minus } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 const CartCard = ({ item }) => {
-
-  const [quantity, setquantity] = useState(item.quantity);
-  const dispatch = useDispatch();
-  const product = useSelector((state) => state.product.value);
-  const productdetails = product.find((product) => product._id == item.productId);
-  // addQuantity
-  const addQuantity = (id) => {
-    setquantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1;
-      dispatch(updateToCart({ productId: id, quantity: newQuantity }));
-      return newQuantity;
-    });
+const [quantity, setQuantity] = useState(item.quantity);
+const dispatch = useDispatch();
+const cartItems = useSelector((state) => state.cart.cart);
+// Handle quantity increase
+  const handleIncrease = (productId) => {
+    const item = cartItems.find((item) => item.productId._id === productId);
+    if (item) {
+      // Dispatch the updateToCart action with the new quantity
+      dispatch(updateToCart({ productId, quantity: item.quantity + 1 }));
+      setQuantity(item.quantity + 1);
+    }
   };
-  // lessQuntity
-  const lessQuntity = (id) => {
-    setquantity((state) => {
-      const newQuantity = state - 1;
-      dispatch(updateToCart({ productId: id, quantity: newQuantity }));
-      return newQuantity;
-    });
+  // Handle quantity decrease
+  const handleDecrease = (productId) => {
+    const item = cartItems.find((item) => item.productId._id === productId);
+    // Ensure quantity does not go below 1
+    if (item && item.quantity > 1) {
+      // Dispatch the updateToCart action with the new quantity
+      dispatch(updateToCart({ productId, quantity: item.quantity - 1 }));
+      setQuantity(item.quantity - 1);
+    }
+  };
+  const handleDelete = (productId) => {
+    // Dispatch the deleteFromCart action
+    dispatch(deleteFromCart(productId));  
   }
+  let sum = item.productId.price * item.quantity;
+  sum = Number(sum.toFixed(2));
   return (
-    <div className="card flex-row border-2 h-52 bg-base-100 w-fit shadow-sm mt-3 ml-32 mr-10 mb-3">
-      <figure>
-        <img
-          src={productdetails.img}
-          alt="Shoes" className='w-60 ml-2 rounded-2xl ' />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">
-          {productdetails.ProductName}
-          <div className="badge badge-secondary">NEW</div>
-        </h2>
-        <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-        <div className="card-actions justify-end items-center space-x-4">
-          <button onClick={() => dispatch(deleteFromCart(item.productId))} className="badge badge-outline cursor-pointer text-[15px] hover:bg-red-100 transition">Cancel</button>
-
-          <div className="flex items-center space-x-2 border-2 rounded-2xl">
-            <button
-              className=" text-black rounded-4xl bg-gray-200 px-2 py-1  hover:bg-gray-300 transition"
-              onClick={() => addQuantity(item.productId)}
-            >
-              +
-            </button>
-
-            <div className="badge badge-outline text-base">{quantity}</div>
-
-            <button
-              className="rounded-4xl text-black bg-gray-200 px-2 py-1  hover:bg-gray-300 transition"
-              onClick={() => lessQuntity(item.productId)}
-            >
-              -
-            </button>
-          </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 min-[550px]:gap-6 border-t border-gray-200 py-6">
+      <div className="flex items-center flex-col min-[550px]:flex-row gap-3 min-[550px]:gap-6 w-full max-xl:justify-center max-xl:max-w-xl max-xl:mx-auto">
+        <div className="img-box">
+          <img
+            src={item.productId.img}
+            alt={item.productId.ProductName}
+            className="xl:w-[140px] rounded-xl object-cover"
+          />
         </div>
-
+        <div className="pro-data w-full max-w-sm">
+          <h5 className="font-semibold text-xl leading-8 text-white max-[550px]:text-center">
+            {item.productId.ProductName}
+          </h5>
+          <p className="font-normal text-lg leading-8 text-gray-500 my-2 min-[550px]:my-3 max-[550px]:text-center">
+            {item.productId.category || "Category"}
+          </p>
+          <h6 className="font-medium  text-lg leading-8 text-indigo-600 max-[550px]:text-center">
+            ₹{item.productId.price}
+          </h6>
+        </div>
+      </div>
+      <div className="flex items-center flex-col min-[550px]:flex-row w-full max-xl:max-w-xl max-xl:mx-auto gap-2">
+        <h6 className="font-manrope font-bold text-2xl leading-9 text-white w-full max-w-[176px] text-center">
+          $15.00 <span className="text-sm text-gray-300 ml-3 lg:hidden whitespace-nowrap">(Delivery Charge)</span>
+        </h6>
+        <div className="flex items-center w-full mx-auto justify-center">
+          <button
+            className="group rounded-l-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            onClick={() => handleDecrease(item.productId._id)}
+          >
+            <Minus size={20} className="text-white transition-all duration-500 group-hover:stroke-black " />
+            
+          </button>
+          <input
+            type="text"
+            className="border-y border-gray-200 outline-none text-white-900 font-semibold text-lg w-full max-w-[118px] min-w-[80px] placeholder:text-gray-900 py-[15px] text-center bg-transparent"
+            value={quantity}
+            readOnly
+          />
+          <button
+            className="group rounded-r-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            onClick={() => handleIncrease(item.productId._id)}
+          >
+            <Plus size={20} className="text-white transition-all duration-500 group-hover:stroke-black" /> 
+          </button>
+        </div>
+        <h6 className="text-indigo-600 font-manrope font-bold text-2xl leading-9 w-full max-w-[176px] text-center">
+          ${sum}
+        </h6>
+        {/* Delete Button */}
+        <button
+          onClick={() => handleDelete(item.productId._id)}
+          className="p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600 transition"
+          title="Remove from Cart"
+        >
+          <Trash2 size={20} />
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default CartCard;
+
+
+

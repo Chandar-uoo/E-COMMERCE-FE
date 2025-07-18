@@ -7,7 +7,7 @@ export const loginService = async (email, password) => {
             email,
             password
         });
-        return res.data.result;
+        return res.data;
 
     } catch (err) {
         console.log(err);
@@ -25,3 +25,8 @@ export const signupService = async (formData) => {
 
     }
 };
+
+export const logoutService =  async()=>{
+    const res = await axiosInstance.get("/auth/logout");
+    return res.data.message;
+}

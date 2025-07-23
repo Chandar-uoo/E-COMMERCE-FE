@@ -9,14 +9,14 @@ import { adduser } from '../store/Slices/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import { getAllProducts } from '../api/productService';
-import Loader from '../components/Loader';
+import Loader from "../components/Common/Loader";
 
 const Home = () => {
   const [Error, setError] = useState(null);
   const dispatch = useDispatch();
   const nav = useNavigate();
   const user = useSelector((state) => state.user.user);
-  const products = useSelector((state) => state.product.value);
+  const products = useSelector((state) => state.products.products);
   // checking user is login or make request
   useEffect(() => {
     const fetchuser = async () => {

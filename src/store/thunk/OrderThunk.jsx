@@ -2,9 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { orderMakeService, orderpaymentService } from "../../api/orderServices";
 
 
-export const orderMaking = createAsyncThunk('order/making', async ({ itemsFromClient }, { getState, rejectWithValue }) => {
+export const orderMaking = createAsyncThunk('order/making', async ({ itemsFromClient,totalPrice }, { getState, rejectWithValue }) => {
     try {
-        const { result, orderId } = await orderMakeService(itemsFromClient);
+        const { result, orderId } = await orderMakeService(itemsFromClient, totalPrice);
         const currentorders = getState().order.order;
         const updatedorders = [...currentorders];
         if (typeof result === "object" && result !== null) {

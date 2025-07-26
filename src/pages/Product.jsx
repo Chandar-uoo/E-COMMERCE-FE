@@ -16,7 +16,7 @@ const Product = () => {
   const nav = useNavigate();
   const errorResult =  useSelector((state)=>state.order.error);
   const process = async () => {
-  const resultAction = await dispatch(orderMaking({ itemsFromClient: [{ productId: id, quantity: 1 }] }));
+  const resultAction = await dispatch(orderMaking({ itemsFromClient: [{ productId: id, quantity: 1 }],totalPrice:item.price }));
   
   
         if (orderMaking.fulfilled.match(resultAction)) {

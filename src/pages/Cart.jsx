@@ -49,11 +49,13 @@ const Cart = () => {
   const handleCheckOut = async () => {
     // Implement checkout logic here  
     const data = await readCartService();
+    const total = data.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0).toFixed(2);
+  
     const items = data.map((item)=>({
       productId:item.productId._id,
       quantity:item.quantity,
     }));
-    const orders = await dispatch(orderMaking({itemsFromClient:items}));
+    const orders = await dispatch(orderMaking({itemsFromClient:items,totalPrice:total}));
     if (orderMaking.fulfilled.match(orders)) {
       // Clear cart after successful order creation
       await clearCart();

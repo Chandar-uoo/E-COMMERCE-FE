@@ -4,6 +4,7 @@ import userReducer from "./Slices/UserSlice"
 import orderReducer from "./Slices/OrderSlice"
 import cartReducer from "./Slices/CartSlice"
 import adminUserReducer from "./AdminSlice/AdminUserSlice"
+import adminOrderReducer from "./AdminSlice/AdminOrderSlice";
 export const AppStore = configureStore({
     reducer:{
         user:userReducer,
@@ -11,5 +12,6 @@ export const AppStore = configureStore({
         cart:cartReducer,
         order:orderReducer,
         adminUserState:adminUserReducer,
+        adminOrderState:adminOrderReducer
     }
 })

@@ -2,14 +2,23 @@ import React,{useState} from 'react'
 import { Eye, Edit } from "lucide-react";
 import { useDispatch } from 'react-redux';
 import { FetchOrdersThunk, UpdateOrderStatusThunk } from '../../store/AdminThunk/AdminOrderThunk';
+import { useNavigate } from 'react-router-dom';
 export const OrderList = ({order}) => {
     const dispatch = useDispatch()
+    const nav =  useNavigate();
       const [edit, setedit] = useState(false);
     const updateStatus = async (orderId) => {
         await dispatch(UpdateOrderStatusThunk(orderId));
         await dispatch(FetchOrdersThunk());
         setedit(false);
+    } 
+    const veiwOrder = async (order) => {
+    try {
+      nav(`/admin/veiwOrder/${order._id}`,{state: { order }});
+    } catch (err) {
+      console.log(err.message);
     }
+  }
   return (
                 <tr>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
@@ -34,7 +43,7 @@ export const OrderList = ({order}) => {
                   <td className="px-6 py-4 text-sm text-gray-900">
                     <div className="flex items-center gap-2">
                       <button className="text-blue-600 hover:text-blue-800">
-                        <Eye className="w-4 h-4" />
+                        <Eye onClick={()=>veiwOrder(order)} className="w-4 h-4" />
                       </button>
                       {!edit ? (
                         <button

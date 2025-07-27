@@ -18,6 +18,9 @@ import Products from './pages/admin/Product';
 import Order from './pages/admin/Order';
 import Customers from './pages/admin/Customers';
 import UserLayout from './layout/UserLayout';
+import ViewProduct from './components/admin/VeiwProduct';
+import ViewOrder from './components/admin/VeiwOrder';
+import ViewCustomer from './components/admin/VeiwCustomer';
 const App = () => {
   return (
     <div>
@@ -43,7 +46,10 @@ const App = () => {
           <Route path = "home" element = {<AdminHomePage/>}/>
           <Route path = "products" element = {<Products/>}/>
           <Route path = "customers" element = {<Customers/>}/>
-          <Route path = "order" element = {<Order/>}/>
+          <Route path = "orders" element = {<Order/>}/>
+          <Route path= "veiwProduct/:id" element = {<ViewProduct/>}/>
+          <Route path= "veiwOrder/:id" element = {<ViewOrder/>}/>
+          <Route path= "veiwCustomer/:id" element = {<ViewCustomer/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

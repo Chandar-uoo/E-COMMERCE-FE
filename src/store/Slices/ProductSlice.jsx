@@ -5,7 +5,7 @@ import {FetchProduct,AddProduct,UpdateProduct,DeleteProduct} from "../thunk/Prod
     name:"productSlice",
     initialState:{
         products : [],
-        status : "idle",
+        loading: false,
         error:null
     },
     reducers:{
@@ -20,54 +20,54 @@ import {FetchProduct,AddProduct,UpdateProduct,DeleteProduct} from "../thunk/Prod
         builder
         // fetch product
         .addCase(FetchProduct.pending,(state)=>{
-            state.status = "loading";
+           state.loading = true;
             state.error = null;
         })
         .addCase(FetchProduct.fulfilled,(state,action)=>{
-            state.status = "success"
+            state.loading = false;
             state.products = action.payload;
         })
         .addCase(FetchProduct.rejected,(state,action)=>{
-            state.status = "failed";
+            state.loading = false;
             state.error = action.payload;
         })
         // add product
         .addCase(AddProduct.pending,(state)=>{
-            state.status = "loading";
+           state.loading = true;
             state.error = null;
         })
         .addCase(AddProduct.fulfilled,(state,action)=>{
-             state.status = "success"
+             state.loading = false;
             state.products = action.payload;
         })
         .addCase(AddProduct.rejected,(state,action)=>{
-            state.status = "failed";
+            state.loading = false;
             state.error = action.payload;
         })
         // upadte product
         .addCase(UpdateProduct.pending,(state)=>{
-            state.status = "loading";
+           state.loading = true;
             state.error = null;
         })
         .addCase(UpdateProduct.fulfilled,(state,action)=>{
-             state.status = "success"
+             state.loading = false;
             state.products = action.payload;
         })
         .addCase(UpdateProduct.rejected,(state,action)=>{
-            state.status = "failed";
+            state.loading = false;
             state.error = action.payload;
         })
         // DeleteProduct
         .addCase(DeleteProduct.pending,(state)=>{
-            state.status = "loading";
+           state.loading = true;
             state.error = null;
         })
         .addCase(DeleteProduct.fulfilled,(state,action)=>{
-             state.status = "success"
+             state.loading = false;
             state.products = action.payload;
         })
         .addCase(DeleteProduct.rejected,(state,action)=>{
-             state.status = "failed";
+             state.loading = false;;
             state.error = action.payload;
         })
     }

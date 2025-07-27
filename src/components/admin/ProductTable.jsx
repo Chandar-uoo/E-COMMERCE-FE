@@ -8,7 +8,7 @@ import Loader from '../Common/Loader';
 import ProductForm from './ProductForm'; // 🆕
 const ProductTable = () => {
   const dispatch = useDispatch();
-  const { products = [], status, error } = useSelector((state) => state.products);
+  const { products = [],loading, error } = useSelector((state) => state.products);
 
   const [editProduct, setEditProduct] = useState(null); // 🆕
 
@@ -32,8 +32,8 @@ const ProductTable = () => {
     fetchAllProducts();
   }, [dispatch]);
 
-  if (status === "loading" && products.length === 0) return <Loader />;
-  if (status === "failed") return <ErrorMessage message={error} />;
+  if (loading && products.length === 0) return <Loader />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">

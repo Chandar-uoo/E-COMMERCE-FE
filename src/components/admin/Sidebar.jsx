@@ -38,7 +38,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             </Link>
           </li>
           <li>
-            <Link onClick={onClose} to="/admin/order" className="flex items-center gap-2 hover:bg-base-300 p-2 rounded-md">
+            <Link onClick={onClose} to="/admin/orders" className="flex items-center gap-2 hover:bg-base-300 p-2 rounded-md">
               <ShoppingCart className="w-5 h-5" /> Orders
             </Link>
           </li>

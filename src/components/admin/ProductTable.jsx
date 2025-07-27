@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Common/Loader';
 import ProductForm from './ProductForm'; // 🆕
+import { useNavigate } from 'react-router-dom';
 const ProductTable = () => {
   const dispatch = useDispatch();
-  const { products = [],loading, error } = useSelector((state) => state.products);
-
+  const nav = useNavigate();
+  const { products =[],loading, error } = useSelector((state) => state.products);
   const [editProduct, setEditProduct] = useState(null); // 🆕
 
   const fetchAllProducts = () => {
@@ -31,13 +32,21 @@ const ProductTable = () => {
   useEffect(() => {
     fetchAllProducts();
   }, [dispatch]);
+  const veiwProduct = async (product) => {
+    try {
+      nav(`/admin/veiwProduct/${product._id}`,{state: { product }});
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
 
   if (loading && products.length === 0) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      {!editProduct && (
+      {/* Search Bar  -- future */}
+      {/*!editProduct && (
         <div className="p-4 border-b border-gray-200">
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
@@ -50,7 +59,7 @@ const ProductTable = () => {
           </div>
         </div>
       </div>
-      )}
+      )*/}
 
 
       {editProduct && (
@@ -87,7 +96,7 @@ const ProductTable = () => {
                 <td className="px-6 py-4 text-sm text-gray-900">
                   <div className="flex items-center gap-2">
                     <button className="text-blue-600 hover:text-blue-800">
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-4 h-4" onClick={()=>veiwProduct(product)} />
                     </button>
                     <button
                       onClick={() => handleEditClick(product)}

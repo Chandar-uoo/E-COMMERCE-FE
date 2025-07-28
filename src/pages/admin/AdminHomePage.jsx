@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Users, DollarSign, Package } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AdminUserThunk } from "../../store/AdminThunk/AdminUserThunk";
 import { FetchOrdersThunk } from "../../store/AdminThunk/AdminOrderThunk";
 import { FetchProduct } from "../../store/thunk/ProductThunk";
+import Loader from "../../components/Common/Loader";
+
 const AdminHomePage = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const { customers } = useSelector((state) => state.adminUserState);
   const { orders } = useSelector((state) => state.adminOrderState);
   /* const { products = [] } = useSelector((state) => state.products);*/
@@ -21,9 +24,12 @@ const AdminHomePage = () => {
     (order) => order.orderStatus === "processing"
   ).length;
   const fetchAll = async () => {
+    setLoading(true);
     await dispatch(AdminUserThunk());
     await dispatch(FetchOrdersThunk("all"));
     /* await dispatch(FetchProduct());*/
+
+    setLoading(false);
   };
 
   /*const totalProducts = products.length;*/
@@ -33,7 +39,9 @@ const AdminHomePage = () => {
   useEffect(() => {
     fetchAll();
   }, []);
-
+ if(loading) {
+    return <Loader />;    
+  }
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl text-teal-400 font-bold mb-6">

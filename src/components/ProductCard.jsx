@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
       </h3>
       <p className="text-sm text-gray-600 mb-1">₹{product.price}</p>
       <p className="text-sm text-yellow-500 mb-2">⭐ {product.rating}</p>
-      <button onClick={() => dispatch(addToCart({ productId: product._id }))} className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition">
+      <button onClick={() => dispatch(addToCart( product._id ))} className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition">
         Add to Cart
       </button>
     </div>

@@ -1,77 +1,44 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addToCartService, deleteCartService, updateCartService } from "../../api/cartServices";
+import { addToCartService, deleteCartService, updateCartService,readCartService } from "../../api/cartServices";
 
-
+// ✅ Add product and then fetch updated cart
 export const addToCart = createAsyncThunk(
-  "user/addToCart",
-  async ({ productId }, { getState, rejectWithValue }) => {
+  "cart/addToCart",
+  async (productId, { rejectWithValue }) => {
     try {
-      const result = await addToCartService(productId);
-      const currentCart = getState().cart.cart;
-      const updatedCart = [...currentCart];
-      
-      if (typeof result === "object" && result !== null) {
-        // CASE 1: New item, add only if not already present
-        const alreadyExists = updatedCart.some(item => item._id === result._id);
-        if (!alreadyExists) {
-          updatedCart.push(result);
-        }
-      } else if (typeof result === "object" && result._id) {
-        // If already existing, do nothing — backend updated quantity
-        const index = updatedCart.findIndex(item => item._id === result._id)
-        if (index !== -1) {
-          updatedCart[index] = {
-            ...updatedCart[index],
-            quantity: updatedCart[index].quantity + 1,
-          };
-        }
-      }
-      // Optional: clean up any accidental duplicates based on `_id`
-      const uniqueCart = Array.from(
-        new Map(updatedCart.map(item => [item._id, item])).values()
-      );
-      return uniqueCart;
+      await addToCartService(productId);
+      const updatedCart = await readCartService();
+      return updatedCart;
     } catch (error) {
-      const msg = error?.respone?.data?.message;
-      return rejectWithValue(msg);
+      return rejectWithValue(error?.response?.data?.message || "Add to cart failed");
     }
   }
 );
-export const updateToCart = createAsyncThunk("updatecart/cart", async ({ productId, quantity }, { getState, rejectWithValue }) => {
-  try {
-    const data = await updateCartService(productId, quantity);
-    const userCart = getState().cart.cart;
-    const updation = userCart.map(item => {
-      if (item._id == data._id) {
-        return {
-          ...item,
-          quantity: data.quantity,
-        }
-      } return item;
-    })
-    return updation;
-  } catch (error) {
-    const msg = error?.respone?.data?.message;
-    return rejectWithValue(msg);
 
-  }
-})
-export const deleteFromCart = createAsyncThunk(
-  "user/deleteFromCart",
-  async (productId, { getState, rejectWithValue }) => {
+// ✅ Update quantity and fetch updated cart
+export const updateToCart = createAsyncThunk(
+  "cart/updateToCart",
+  async ({ productId, quantity }, { rejectWithValue }) => {
     try {
-      const result = await deleteCartService(productId);
-
-      // Get current cart from state
-      const currentCart = getState().cart.cart;
-
-      // Filter out the deleted product
-      const updatedCart = currentCart.filter(item => item.productId._id !== result);
+      await updateCartService(productId, quantity);
+      const updatedCart = await readCartService();
       return updatedCart;
-
     } catch (error) {
-      const msg = error?.respone?.data?.message;
-      return rejectWithValue(msg);
+      return rejectWithValue(error?.response?.data?.message || "Update cart failed");
+    }
+  }
+);
+
+// ✅ Delete item and fetch updated cart
+export const deleteFromCart = createAsyncThunk(
+  "cart/deleteFromCart",
+  async (productId, { rejectWithValue }) => {
+    try {
+      await deleteCartService(productId);
+      const updatedCart = await readCartService();
+      return updatedCart;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || "Delete cart failed");
     }
   }
 );

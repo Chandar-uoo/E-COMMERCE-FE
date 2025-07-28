@@ -77,7 +77,7 @@ const Product = () => {
           </div>
 
           <div className="text-center">
-            <button onClick={() => dispatch(addToCart({ productId: item._id }))} className="px-12 py-4 bg-indigo-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-indigo-600 transition">
+            <button onClick={() => dispatch(addToCart( item._id ))} className="px-12 py-4 bg-indigo-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-indigo-600 transition">
               Add to Cart
             </button>
             <button onClick={process} className="px-12 py-4 bg-green-500 text-white text-xl font-medium rounded-lg shadow-md hover:bg-green-600 transition ml-4">

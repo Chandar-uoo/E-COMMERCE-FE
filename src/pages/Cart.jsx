@@ -3,9 +3,10 @@ import CartCard from '../components/CartCard';
 import EmptyState from '../components/EmptyState';
 import { useDispatch, useSelector } from 'react-redux';
 import { readCartService,clearCart} from '../api/cartServices';
-import { addCartItem } from '../store/Slices/CartSlice';
+import { addCartItem, clearCartState } from '../store/Slices/CartSlice';
 import { orderMaking } from '../store/thunk/OrderThunk';
 import { useNavigate } from 'react-router-dom';
+
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
@@ -58,8 +59,10 @@ const Cart = () => {
     const orders = await dispatch(orderMaking({itemsFromClient:items,totalPrice:total}));
     if (orderMaking.fulfilled.match(orders)) {
       // Clear cart after successful order creation
-      await clearCart();
-      dispatch(addCartItem([]));
+   // ✅ Replace direct call to clearCart()
+dispatch(clearCartState()); // Redux state
+await clearCart(); // Backend clear
+
       //nav to transaction
       nav("/product/payment")
     }

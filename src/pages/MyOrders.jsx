@@ -55,7 +55,7 @@ const MyOrders = () => {
               <EmptyState message="No items in this order." />
             )}
             <p className="text-lg font-semibold text-green-300">
-                total price: ${order?.price}
+                total price: ${order?.totalPrice}
               </p>
           </div>
         ))}

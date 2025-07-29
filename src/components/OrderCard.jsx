@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { getProduct } from "../api/productService";
+import { useDispatch, useSelector } from "react-redux";
+import { orderMaking } from "../store/thunk/OrderThunk";
+import ErrorMessage from "./ErrorMessage";
 
 
 
 const OrderCard = ({item}) => {
   const nav = useNavigate();
-
+  const dispatch = useDispatch();
+  const errorResult =  useSelector((state)=>state.order.error);
       const veiwProduct = async (id) => {
         try {
           const item = await getProduct(id);
@@ -14,6 +18,18 @@ const OrderCard = ({item}) => {
           console.log(err.message);
         }
       }
+
+      const process = async (product) => {
+  const resultAction = await dispatch(orderMaking({ itemsFromClient: [{ productId: product._id, quantity: 1 }],totalPrice:product.price }));
+  
+  
+        if (orderMaking.fulfilled.match(resultAction)) {
+      nav("/product/payment");
+    } else {
+      console.error("Order creation failed:", resultAction.payload || resultAction.error);
+      return <ErrorMessage error={errorResult}/>
+    }
+  };
   return(
     <div className="space-y-4">
                 <div
@@ -42,7 +58,7 @@ const OrderCard = ({item}) => {
                     <button onClick={()=>veiwProduct(item.productId._id)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md">
                       View Product
                     </button>
-                    <button className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md">
+                    <button onClick={()=>process(item.productId)} className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md">
                       Buy Again
                     </button>
                   </div>

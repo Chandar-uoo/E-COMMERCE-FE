@@ -12,6 +12,11 @@ const OrderSlice = createSlice({
   reducers: {
     addOrders:(state,action)=>{
       state.order = action.payload;
+    },
+    clearOrder:(state)=>{
+      state.order = [];
+      state.orderId = null;
+      state.error = null;
     }
   },
   extraReducers: (builder) => {
@@ -34,5 +39,5 @@ const OrderSlice = createSlice({
 
 }
 )
-export const {addOrders} =  OrderSlice.actions;
+export const {addOrders,clearOrder} =  OrderSlice.actions;
 export default OrderSlice.reducer;

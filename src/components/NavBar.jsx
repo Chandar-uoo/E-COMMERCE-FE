@@ -3,15 +3,19 @@ import { TiShoppingCart } from "react-icons/ti";
 import { FaTruck } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { searchService } from '../api/productService';
 import { logoutService } from '../api/userService';
+import { clearOrder } from '../store/Slices/OrderSlice';
+import { clearUser } from '../store/Slices/UserSlice';
+import { clearCartState } from '../store/Slices/CartSlice';
 
 
 const NavBar = () => {
   const user = useSelector((state) => state.user.user);
   const [text, settext] = useState('');
   const nav = useNavigate();
+  const dispatch =useDispatch();
   const searchItem = async () => {
     const res = await searchService(text)
     nav('/search-results', { state: { products: res } })
@@ -19,6 +23,10 @@ const NavBar = () => {
 
   const logout = async () => {
     const res = await logoutService();
+    localStorage.clear();
+  dispatch(clearCartState());
+    dispatch(clearOrder());
+    dispatch(clearUser());
     alert(res);
     nav("/login")
   }

@@ -32,8 +32,8 @@ const UserSlice = createSlice({
              })
              .addCase(LoginThunkService.fulfilled,(state,action)=>{
                  state.loading = false;
-                 state.token =  action.payload.result;
-                 state.user = action.payload.accessToken;
+                 state.user =  action.payload.result;
+                 state.token = action.payload.accessToken;
              })
              .addCase(LoginThunkService.rejected,(state,action)=>{
                  state.loading = false;

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import EmptyState from '../components/EmptyState';
+import EmptyState from '../../components/Common/EmptyState';
 
 
 const Search = () => {

@@ -2,10 +2,10 @@ import React from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../store/thunk/CartThunk';
-import { orderMaking } from '../store/thunk/OrderThunk';
-import EmptyState from '../components/EmptyState';
-import ErrorMessage from '../components/ErrorMessage';
+import { addToCart } from '../../store/thunk/CartThunk';
+import { orderMaking } from '../../store/thunk/OrderThunk';
+import EmptyState from '../../components/Common/EmptyState';
+import ErrorMessage from '../../components/Common/ErrorMessage';
 
 
 const Product = () => {

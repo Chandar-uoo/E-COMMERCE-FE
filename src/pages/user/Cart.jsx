@@ -1,10 +1,10 @@
 import React, { useMemo,useEffect} from 'react'
-import CartCard from '../components/CartCard';
-import EmptyState from '../components/EmptyState';
+import CartCard from '../../components/user/CartCard';
+import EmptyState from '../../components/Common/EmptyState';
 import { useDispatch, useSelector } from 'react-redux';
-import { readCartService,clearCart} from '../api/cartServices';
-import { addCartItem, clearCartState } from '../store/Slices/CartSlice';
-import { orderMaking } from '../store/thunk/OrderThunk';
+import { readCartService,clearCart} from '../../api/cartServices';
+import { addCartItem, clearCartState } from '../../store/Slices/CartSlice';
+import { orderMaking } from '../../store/thunk/OrderThunk';
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {

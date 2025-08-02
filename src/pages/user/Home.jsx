@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
-import Banner from '../components/Banner';
-import ProductList from '../components/ProductList';
-import { Add } from '../store/Slices/ProductSlice'
+import NavBar from '../../components/user/NavBar';
+import Footer from '../../components/user/Footer';
+import Banner from '../../components/user/Banner';
+import ProductList from '../../components/user/ProductList';
+import { Add } from '../../store/Slices/ProductSlice'
 import { useDispatch, useSelector } from 'react-redux';
-import { adduser } from '../store/Slices/UserSlice';
+import { adduser } from '../../store/Slices/UserSlice';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../api/axiosInstance';
-import { getAllProducts } from '../api/productService';
-import Loader from "../components/Common/Loader";
+import axiosInstance from '../../api/axiosInstance';
+import { getAllProducts } from '../../api/productService';
+import Loader from "../../components/Common/Loader";
+import ErrorMessage from '../../components/Common/ErrorMessage';
 
 const Home = () => {
   const [Error, setError] = useState(null);
@@ -23,9 +24,7 @@ const Home = () => {
       try {
         const res = await axiosInstance.get("/user/userCheck", {
           withCredentials: true,
-        });
-
-        dispatch(adduser(res.data.result))
+        });  
       } catch (err) {
         if (err.response && err.response.status === 401) {
           alert("login to continue ")
@@ -49,7 +48,6 @@ const Home = () => {
       } catch (error) {
         setError(error.messsage);
         console.log(error);
-
       }
     }
     result();
@@ -58,6 +56,7 @@ const Home = () => {
 
   if (products == 0) return <Loader />;
   if (Error) return <ErrorMessage error={Error} />
+  
   return (
     <>
       <Banner/>

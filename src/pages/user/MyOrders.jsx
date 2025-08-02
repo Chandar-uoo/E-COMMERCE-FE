@@ -1,9 +1,9 @@
 import React ,{useEffect}from 'react'
-import OrderCard from '../components/OrderCard';
+import OrderCard from '../../components/user/OrderCard';
 import { useDispatch, useSelector } from 'react-redux';
-import EmptyState from '../components/EmptyState';
-import { readOrder } from '../api/orderServices';
-import { addOrders } from '../store/Slices/OrderSlice';
+import EmptyState from '../../components/Common/EmptyState';
+import { readOrder } from '../../api/orderServices';
+import { addOrders } from '../../store/Slices/OrderSlice';
 
 
 const MyOrders = () => {

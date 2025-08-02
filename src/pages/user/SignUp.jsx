@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { adduser } from "../store/Slices/UserSlice";
-import { useDispatch } from "react-redux";
-import { signupService } from "../api/userService";
+import { useDispatch, useSelector } from "react-redux";
+import { SignUpThunk } from "../../store/thunk/UserThunk";
+import ErrorMessage from "../../components/Common/ErrorMessage";
+import Loader from "../../components/Common/Loader";
 
 
 const SignUp = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-
+  const {user,error,loading} =  useSelector((state)=>state.user)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,11 +30,10 @@ const SignUp = () => {
   // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-      const res = await signupService(formData);
-      dispatch(adduser(res));
-      nav('/')
+       await dispatch(SignUpThunk((formData)));
+     if(user)  nav('/');
   };
-
+if(loading) return <Loader/>
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-base-200 shadow rounded space-y-4 text-white">
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
@@ -110,7 +110,7 @@ const SignUp = () => {
           value={formData.password}
           onChange={handleChange}
         />
-
+        {error && <ErrorMessage message={error}/>}
         <button type="submit" className="btn btn-primary w-full mt-4">Update Profile</button>
       </fieldset>
     </form>

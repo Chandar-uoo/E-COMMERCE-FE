@@ -2,9 +2,9 @@ import React, { useEffect ,useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchOrdersThunk } from "../../store/AdminThunk/AdminOrderThunk";
 import Loader from "../../components/Common/Loader";
-import ErrorMessage from "../../components/ErrorMessage";
+import ErrorMessage from "../../components/Common/ErrorMessage";
 import { OrderList } from "../../components/admin/OrderList";
-import EmptyState from "../../components/EmptyState";
+import EmptyState from "../../components/Common/EmptyState";
 
 const Order = () => {
   const { orders, loading, error } = useSelector(

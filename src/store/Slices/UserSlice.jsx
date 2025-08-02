@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LoginThunkService } from "../thunk/UserThunk";
+import { LoginThunkService, SignUpThunk, UpdateUserDetailsThunk, UpdateUserPasswordThunk } from "../thunk/UserThunk";
+
 
 const initialState = {
   loading:false,
@@ -11,6 +12,12 @@ const UserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    adduser:(state,action)=>{
+      state.user =  action.payload
+    },
+    setAccessToken:(state,action)=>{
+      state.token =  action.payload
+    },
     clearUser:(state)=>{    
       state.user = null;
       state.token = null;
@@ -39,9 +46,46 @@ const UserSlice = createSlice({
                  state.loading = false;
                  state.error = action.payload;
              })
+             .addCase(SignUpThunk.pending,(state)=>{
+                state.loading = true;
+                 state.error = null;
+             })
+             .addCase(SignUpThunk.fulfilled,(state,action)=>{
+                 state.loading = false;
+                 state.user =  action.payload.result;
+                 state.token = action.payload.accessToken;
+             })
+             .addCase(SignUpThunk.rejected,(state,action)=>{
+                 state.loading = false;
+                 state.error = action.payload;
+             })
+             .addCase(UpdateUserDetailsThunk.pending,(state)=>{
+                state.loading = true;
+                 state.error = null;
+             })
+             .addCase(UpdateUserDetailsThunk.fulfilled,(state,action)=>{
+                   state.user.name = action.payload?.name;
+                   state.user.DOB = action.payload?.DOB;
+                   state.user.address = action.payload?.address;
+                   state.user.phoneNo = action.payload?.phoneNo;
+                  state.user.image = action.payload?.image;
+                  state.loading = false;
+             })
+             .addCase(UpdateUserDetailsThunk.rejected,(state,action)=>{
+                 state.loading = false;
+                 state.error = action.payload;
+             })
+              .addCase(UpdateUserPasswordThunk.pending,(state)=>{
+                state.loading = true;
+                 state.error = null;
+             })
+              .addCase(UpdateUserPasswordThunk.rejected,(state,action)=>{
+                 state.loading = false;
+                 state.error = action.payload;
+             })
   }
 })
 
-export const { adduser,setAccessToken,clearUser,updateUserDetails } = UserSlice.actions;
+export const {adduser,setAccessToken,clearUser,updateUserDetails } = UserSlice.actions;
 export default UserSlice.reducer;
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateUserDetailsThunk, UpdateUserPasswordThunk } from "../../store/thunk/UserThunk";
 import Loader from "../Common/Loader";
 import ErrorMessage from "../Common/ErrorMessage";
-
+import userImage from "../../assets/default-img.jpg";
 export const Profile = () => {
   const { user, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -63,12 +63,12 @@ export const Profile = () => {
       {/* Display Image and Info */}
       <div className="text-center mb-8">
         <img
-          src={user.image}
+           src={user?.image?.trim() ? user.image : userImage}
           alt="Profile"
           className="w-24 h-24 rounded-full object-cover mx-auto mb-2 border"
         />
-        <p className="text-lg font-semibold">{user.name}</p>
-        <p className="text-white">{user.email}</p>
+        <p className="text-lg font-semibold">{user?.name}</p>
+        <p className="text-white">{user?.email}</p>
       </div>
 
       {/* Edit Buttons */}

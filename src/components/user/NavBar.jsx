@@ -9,7 +9,7 @@ import { logoutService } from '../../api/userService';
 import { clearOrder } from '../../store/Slices/OrderSlice';
 import { clearUser } from '../../store/Slices/UserSlice';
 import { clearCartState } from '../../store/Slices/CartSlice';
-
+import userImage from "../../assets/default-img.jpg";
 
 const NavBar = () => {
   const user = useSelector((state) => state.user.user);
@@ -78,7 +78,7 @@ const NavBar = () => {
             <div className="w-10 rounded-full ring ring-cyan-400 ring-offset-base-100 ring-offset-2">
               <img
                 alt="User avatar"
-                src={user?.image || "https://via.placeholder.com/150"}
+                 src={user?.image?.trim() ? user.image : userImage}
               />
             </div>
           </div>

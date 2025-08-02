@@ -1,45 +1,49 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { orderMakeService, orderpaymentService } from "../../api/orderServices";
 
-
-export const orderMaking = createAsyncThunk('order/making', async ({ itemsFromClient,totalPrice }, { getState, rejectWithValue }) => {
+export const orderMaking = createAsyncThunk(
+  "order/making",
+  async ({ itemsFromClient, totalPrice }, { getState, rejectWithValue }) => {
     try {
-        const { result, orderId } = await orderMakeService(itemsFromClient, totalPrice);
-        const currentorders = getState().order.order;
-        const updatedorders = [...currentorders];
-        if (typeof result === "object" && result !== null) {
-            updatedorders.push(result);
-        }
-        const uniqueorders = Array.from(
-            new Map(updatedorders.map(item => [item._id, item])).values()
-        );
+      const { result, orderId } = await orderMakeService(
+        itemsFromClient,
+        totalPrice
+      );
+      const currentorders = getState().order.order;
+      const updatedorders = [...currentorders];
+      if (typeof result === "object" && result !== null) {
+        updatedorders.push(result);
+      }
+      const uniqueorders = Array.from(
+        new Map(updatedorders.map((item) => [item._id, item])).values()
+      );
 
-        return { uniqueorders, orderId };
-
-    } catch (error) {
-        const msg = error?.respone?.data?.message;
-        return rejectWithValue(msg);
+      return { uniqueorders, orderId };
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
     }
-
-})
-export const orderpayment = createAsyncThunk('order/payment', async ({ orderId, paymentMethod }, { getState, rejectWithValue }) => {
+  }
+);
+export const orderpayment = createAsyncThunk(
+  "order/payment",
+  async ({ orderId, paymentMethod }, { getState, rejectWithValue }) => {
     try {
-        const data = await orderpaymentService(orderId, paymentMethod);
-        const currentorder = getState().order.order;
-        const updatedorders = [...currentorder];
-        if (typeof data === "object" && data != null) {
-            // If already existing, do nothing — backend updated quantity
-            const index = updatedorders.findIndex(item => item._id === data._id);
-            if (index !== -1) {
-                updatedorders[index] = data;
-            }
+      const data = await orderpaymentService(orderId, paymentMethod);
+      const currentorder = getState().order.order;
+      const updatedorders = [...currentorder];
+      if (typeof data === "object" && data != null) {
+        // If already existing, do nothing — backend updated quantity
+        const index = updatedorders.findIndex((item) => item._id === data._id);
+        if (index !== -1) {
+          updatedorders[index] = data;
         }
-        const uniqueorders = Array.from(
-            new Map(updatedorders.map(item => [item._id, item])).values()
-        );
-        return uniqueorders;
-    } catch (error) {
-        const msg = error?.respone?.data?.message;
-        return rejectWithValue(msg);
+      }
+      const uniqueorders = Array.from(
+        new Map(updatedorders.map((item) => [item._id, item])).values()
+      );
+      return uniqueorders;
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
     }
-})
+  }
+);

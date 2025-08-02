@@ -4,7 +4,7 @@ import { ShoppingCart, Users, DollarSign, Package } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AdminUserThunk } from "../../store/AdminThunk/AdminUserThunk";
 import { FetchOrdersThunk } from "../../store/AdminThunk/AdminOrderThunk";
-import { FetchProduct } from "../../store/thunk/ProductThunk";
+import { FetchProduct } from "../../store/AdminThunk/ProductThunk";
 import Loader from "../../components/Common/Loader";
 
 const AdminHomePage = () => {
@@ -12,7 +12,7 @@ const AdminHomePage = () => {
   const [loading, setLoading] = useState(false);
   const { customers } = useSelector((state) => state.adminUserState);
   const { orders } = useSelector((state) => state.adminOrderState);
-  /* const { products = [] } = useSelector((state) => state.products);*/
+  /* const { products = [] } = useSelector((state) => state.adminProductState);*/
 
   const nav = useNavigate();
 
@@ -25,7 +25,7 @@ const AdminHomePage = () => {
   ).length;
   const fetchAll = async () => {
     setLoading(true);
-    await dispatch(AdminUserThunk());
+    await dispatch(AdminUserThunk(""));
     await dispatch(FetchOrdersThunk("all"));
     /* await dispatch(FetchProduct());*/
 
@@ -35,7 +35,7 @@ const AdminHomePage = () => {
   /*const totalProducts = products.length;*/
   const totalOrders = orders.length;
   const totalUsers = customers.length;
-  const totalRevenue = orders.reduce((acc, order) => acc + order.totalPrice, 0);
+  const totalRevenue = orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2);
   useEffect(() => {
     fetchAll();
   }, []);
@@ -166,7 +166,7 @@ const AdminHomePage = () => {
             Manage Products
           </Link>
           <Link
-            to={"/admin/order"}
+            to={"/admin/orders"}
             className="block  text-black text-center px-4 py-3 rounded-lg border border-gray-300 hover:bg-blue-100 transition"
           >
             Manage Orders

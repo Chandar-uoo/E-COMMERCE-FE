@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import {FetchProduct,AddProduct,UpdateProduct,DeleteProduct} from "../thunk/ProductThunk"
+import { FetchProducts } from "../thunk/ProductThunk";
 
  const productSlice = createSlice({
     name:"productSlice",
@@ -14,64 +14,30 @@ import {FetchProduct,AddProduct,UpdateProduct,DeleteProduct} from "../thunk/Prod
         },
         Delete:(state)=>{
             state.products = [];
-        }
+        },
+         clearError:(state)=>{
+            state.error = null;
+        },
+
     },
     extraReducers:(builder)=>{
         builder
         // fetch product
-        .addCase(FetchProduct.pending,(state)=>{
+        .addCase(FetchProducts.pending,(state)=>{
            state.loading = true;
             state.error = null;
         })
-        .addCase(FetchProduct.fulfilled,(state,action)=>{
+        .addCase(FetchProducts.fulfilled,(state,action)=>{
             state.loading = false;
             state.products = action.payload;
         })
-        .addCase(FetchProduct.rejected,(state,action)=>{
+        .addCase(FetchProducts.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
-        // add product
-        .addCase(AddProduct.pending,(state)=>{
-           state.loading = true;
-            state.error = null;
-        })
-        .addCase(AddProduct.fulfilled,(state,action)=>{
-             state.loading = false;
-            state.products = action.payload;
-        })
-        .addCase(AddProduct.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
-        // upadte product
-        .addCase(UpdateProduct.pending,(state)=>{
-           state.loading = true;
-            state.error = null;
-        })
-        .addCase(UpdateProduct.fulfilled,(state,action)=>{
-             state.loading = false;
-            state.products = action.payload;
-        })
-        .addCase(UpdateProduct.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
-        // DeleteProduct
-        .addCase(DeleteProduct.pending,(state)=>{
-           state.loading = true;
-            state.error = null;
-        })
-        .addCase(DeleteProduct.fulfilled,(state,action)=>{
-             state.loading = false;
-            state.products = action.payload;
-        })
-        .addCase(DeleteProduct.rejected,(state,action)=>{
-             state.loading = false;;
-            state.error = action.payload;
-        })
+
     }
  })
- export const {Add,Delete} = productSlice.actions;
+ export const {Add,Delete,clearError} = productSlice.actions;
  export default productSlice.reducer;
 

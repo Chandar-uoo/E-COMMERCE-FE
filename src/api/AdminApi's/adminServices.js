@@ -1,13 +1,13 @@
 import axiosInstance from "../../api/axiosInstance"
 
 
-export const fetchProducts =  async()=>{
-        const res = await axiosInstance.get("/admin/products");
+export const fetchProducts =  async(text)=>{
+        const res = await axiosInstance.get(`/admin/products?fetch=${text}`);
         return res.data.result;
 }
 
-export const addProduct =  async(product)=>{
-     const res = await  axiosInstance.post("/admin/add-product",{product});
+export const addProduct =  async( updateFields)=>{
+     const res = await  axiosInstance.post("/admin/add-product",{ updateFields});
      return res.data.result;
 }
 

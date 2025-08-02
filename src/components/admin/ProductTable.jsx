@@ -1,20 +1,22 @@
 
 import React, { useEffect,useState } from 'react';
 import { Search, Eye, Edit, Trash2 } from 'lucide-react';
-import { DeleteProduct, FetchProduct } from '../../store/thunk/ProductThunk';
+import { DeleteProduct, FetchProduct } from '../../store/AdminThunk/ProductThunk';
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from '../Common/ErrorMessage';
 import Loader from '../Common/Loader';
-import ProductForm from './ProductForm'; // 🆕
 import { useNavigate } from 'react-router-dom';
+import EmptyState from '../Common/EmptyState';
+
 const ProductTable = () => {
+  const [text, settext] = useState('');
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const { products =[],loading, error } = useSelector((state) => state.products);
-  const [editProduct, setEditProduct] = useState(null); // 🆕
+  const { products =[],loading, error } = useSelector((state) => state.adminProductState);
+
 
   const fetchAllProducts = () => {
-    dispatch(FetchProduct());
+    dispatch(FetchProduct(text));
   };
 
   const deleteProduct = async (id) => {
@@ -22,16 +24,15 @@ const ProductTable = () => {
   };
 
   const handleEditClick = (product) => {
-    setEditProduct(product); // 🆕
+      nav("/admin/form",{state:{product}})
   };
 
-  const handleFormClose = () => {
-    setEditProduct(null); // 🆕
-  };
+  
 
   useEffect(() => {
     fetchAllProducts();
   }, [dispatch]);
+
   const veiwProduct = async (product) => {
     try {
       nav(`/admin/veiwProduct/${product._id}`,{state: { product }});
@@ -40,42 +41,30 @@ const ProductTable = () => {
     }
   }
 
-  if (loading && products.length === 0) return <Loader />;
-  if (error) return <ErrorMessage message={error} />;
+  if (loading) return <Loader />;
+ if(error) return <ErrorMessage message={error}/>
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       {/* Search Bar  -- future */}
-      {/*!editProduct && (
+    
         <div className="p-4 border-b border-gray-200">
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search onClick={fetchAllProducts} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
+              value={text}
+              onChange={(e)=>settext(e.target.value)}
               placeholder="Search products..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
       </div>
-      )*/}
+      
 
-
-      {editProduct && (
-        <div className="p-4">
-          <ProductForm
-            isUpdate={true}
-            initialData={editProduct}
-            onSuccess={() => {
-              handleFormClose();
-              fetchAllProducts(); // refresh list
-            }}
-          />
-        </div>
-      )}
-
-      {!editProduct && (<div className="overflow-x-auto">
+      { products.length > 1  ?  (<div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
@@ -90,7 +79,7 @@ const ProductTable = () => {
             {products?.map((product) => (
               <tr key={product._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.ProductName}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">{product.price}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">$ {product.price}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.stock}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.category}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">
@@ -116,7 +105,7 @@ const ProductTable = () => {
             ))}
           </tbody>
         </table>
-      </div>  )}
+      </div>) : (<EmptyState message={"no result found"}/>)}
     </div>
   );
 };

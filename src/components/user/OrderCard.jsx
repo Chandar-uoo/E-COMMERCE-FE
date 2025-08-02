@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { getProduct } from "../api/productService";
+import { getProduct } from "../../api/productService";
 import { useDispatch, useSelector } from "react-redux";
-import { orderMaking } from "../store/thunk/OrderThunk";
-import ErrorMessage from "./ErrorMessage";
+import { orderMaking } from "../../store/thunk/OrderThunk";
+import ErrorMessage from "../Common/ErrorMessage";
 
 
 

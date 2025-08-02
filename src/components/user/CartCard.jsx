@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateToCart,deleteFromCart } from "../store/thunk/CartThunk";
+import { updateToCart,deleteFromCart } from "../../store/thunk/CartThunk";
 import { Plus, Minus } from "lucide-react";
 import { Trash2 } from "lucide-react";
 

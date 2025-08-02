@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { addToCart } from '../store/thunk/CartThunk';
+import { addToCart } from '../../store/thunk/CartThunk';
 import { useDispatch } from 'react-redux';
-import { getProduct } from '../api/productService';
-import ErrorMessage from './ErrorMessage';
+import { getProduct } from '../../api/productService';
+import ErrorMessage from '../Common/ErrorMessage';
 
 const ProductCard = ({ product }) => {
   const [Error, setError] = useState(null);

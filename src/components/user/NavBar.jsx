@@ -4,11 +4,11 @@ import { FaTruck } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchService } from '../api/productService';
-import { logoutService } from '../api/userService';
-import { clearOrder } from '../store/Slices/OrderSlice';
-import { clearUser } from '../store/Slices/UserSlice';
-import { clearCartState } from '../store/Slices/CartSlice';
+import { searchService } from '../../api/productService';
+import { logoutService } from '../../api/userService';
+import { clearOrder } from '../../store/Slices/OrderSlice';
+import { clearUser } from '../../store/Slices/UserSlice';
+import { clearCartState } from '../../store/Slices/CartSlice';
 
 
 const NavBar = () => {
@@ -89,9 +89,8 @@ const NavBar = () => {
             className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-gray-900 rounded-box w-52 text-white"
           >
             <li>
-              <a className="justify-between hover:bg-gray-800 rounded">
+              <a onClick={()=>nav("/profile")} className="justify-between hover:bg-gray-800 rounded">
                 Profile
-                <span className="badge badge-accent">New</span>
               </a>
             </li>
             <li><a className="hover:bg-gray-800 rounded">Settings</a></li>

@@ -1,17 +1,18 @@
-import React ,{useEffect}from 'react';
+import React ,{useEffect,useState}from 'react';
 import { Search, Eye, Edit } from 'lucide-react';
 import Loader from "../../components/Common/Loader"
 import { AdminUserThunk } from '../../store/AdminThunk/AdminUserThunk';
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorMessage from '../../components/ErrorMessage';
+import ErrorMessage from '../../components/Common/ErrorMessage';
 import { useNavigate } from 'react-router-dom';
+import EmptyState from '../../components/Common/EmptyState';
 const Customers = () => {
-
+const [user, setuser] = useState('')
 const dispatch  = useDispatch();
 const nav = useNavigate();
 const {customers,error,loading} = useSelector((state) => state.adminUserState);
 const fetchCustomers = async () => {
-  await dispatch(AdminUserThunk());
+  await dispatch(AdminUserThunk(user));
 };
   useEffect(() => {
     fetchCustomers();
@@ -31,14 +32,16 @@ const fetchCustomers = async () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Customers</h2>
         {/*search custome -- future */}
-        {/* <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <div className="relative">
+          <Search onClick={fetchCustomers} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-4 h-4" />
           <input
             type="text"
+            value={user}
+            onChange={(e)=>setuser(e.target.value)}
             placeholder="Search customers..."
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 pr-4 py-2 border border-gray-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div> */}
+        </div> 
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -54,7 +57,7 @@ const fetchCustomers = async () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {customers.map((customer) => (
+              {customers.length > 1 ? (customers.map((customer) => (
                 <tr key={customer._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">{customer.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{customer.email}</td>
@@ -71,7 +74,7 @@ const fetchCustomers = async () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))):(<EmptyState message={"no users found"}/>)}
             </tbody>
           </table>
         </div>

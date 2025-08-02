@@ -21,7 +21,7 @@ const ViewProduct = () => {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-        <p><strong>Price:</strong> ₹{product.price}</p>
+        <p><strong>Price:</strong>$ {product.price}</p>
         <p><strong>Stock:</strong> {product.stock}</p>
         <p><strong>Rating:</strong> ⭐ {product.rating}</p>
         <p><strong>Created:</strong> {new Date(product.createdAt).toLocaleString()}</p>

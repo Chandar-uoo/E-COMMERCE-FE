@@ -26,7 +26,7 @@ const ViewOrder = () => {
             <div>
               <p className="font-semibold">{item.productId.ProductName}</p>
               <p className="text-sm text-black">Qty: {item.quantity}</p>
-              <p className="text-sm text-black">₹ {item.productId.price}</p>
+              <p className="text-sm text-black">$ {item.productId.price}</p>
             </div>
           </div>
         ))}
@@ -34,7 +34,7 @@ const ViewOrder = () => {
 
       <div className="grid grid-cols-2 text-black gap-4 text-sm mt-4">
         <p>
-          <strong>Total Price:</strong> ₹{order.totalPrice}
+          <strong>Total Price:</strong>$ {order.totalPrice}
         </p>
         <p>
           <strong>Address:</strong> {order.address}

@@ -20,7 +20,7 @@ export const logoutService =  async()=>{
 }
 
 export const editProfileService =  async (formData) => {
-    const res =  await axiosInstance.post("/user/updateUser",{
+    const res =  await axiosInstance.patch("/user/updateUser",{
         name:formData.name,
         DOB:formData.DOB,
         image:formData.image,

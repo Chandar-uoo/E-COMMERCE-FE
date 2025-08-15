@@ -9,7 +9,7 @@ import {
 
 export const LoginThunkService = createAsyncThunk(
   "user/login",
-  async ({ email, password }, { getState, rejectWithValue }) => {
+  async ({ email, password }, {  rejectWithValue }) => {
     try {
       const res = await loginService(email, password);
       return res;
@@ -20,7 +20,7 @@ export const LoginThunkService = createAsyncThunk(
 );
 export const SignUpThunk = createAsyncThunk(
   "user/signUp",
-  async (formData, { getState, rejectWithValue }) => {
+  async (formData, {  rejectWithValue }) => {
     try {
       const res = await signupService(formData);
       return res;
@@ -31,7 +31,7 @@ export const SignUpThunk = createAsyncThunk(
 );
 export const CheckUser =  createAsyncThunk(
   "user/check",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, {  rejectWithValue }) => {
     try {
       const res = await userCheckService();
       return res;
@@ -42,7 +42,7 @@ export const CheckUser =  createAsyncThunk(
 );
 export const UpdateUserDetailsThunk = createAsyncThunk(
   "user/update",
-  async (formData, { getState, rejectWithValue }) => {
+  async (formData, {  rejectWithValue }) => {
     try {
       const res = await editProfileService(formData);
       return res;
@@ -53,7 +53,7 @@ export const UpdateUserDetailsThunk = createAsyncThunk(
 );
 export const UpdateUserPasswordThunk = createAsyncThunk(
   "user/updatePassword",
-  async ({ oldPassword, newPassword }, { getState, rejectWithValue }) => {
+  async ({ oldPassword, newPassword }, {  rejectWithValue }) => {
     try {
       await updatePasswordService({ oldPassword, newPassword });
     } catch (err) {

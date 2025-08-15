@@ -8,7 +8,7 @@ import {
 
 export const FetchProduct = createAsyncThunk(
   "products/fetch",
-  async (text, { getState, rejectWithValue }) => {
+  async (text, {  rejectWithValue }) => {
     try {
       const data = await fetchProducts(text);
       return data;

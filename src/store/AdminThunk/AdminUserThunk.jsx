@@ -3,7 +3,7 @@ import { fetchUsers } from "../../api/AdminApi's/userService";
 
 export const AdminUserThunk = createAsyncThunk(
   "user/addToCart",
-  async (user, { getState, rejectWithValue }) => {
+  async (user, { rejectWithValue }) => {
     try {
       const response = await fetchUsers(user);
       return response;

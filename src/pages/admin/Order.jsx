@@ -1,4 +1,4 @@
-import React, { useEffect ,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchOrdersThunk } from "../../store/AdminThunk/AdminOrderThunk";
 import Loader from "../../components/Common/Loader";
@@ -20,7 +20,7 @@ const Order = () => {
   }, [status]);
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -32,7 +32,7 @@ const Order = () => {
             className="border border-gray-300 text-black rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Status</option>
-            <option value="Pending">Pending</option>
+            <option value="cancelled">Cancelled</option>
             <option value="processing">Processing</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
@@ -69,10 +69,17 @@ const Order = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {orders.length > 0 ? orders?.map((order) => (
-                <OrderList key={order._id} order={order} />   
-              )) : (  <EmptyState message="No orders found" />
-                )}
+              {orders.length > 0 ? (
+                orders?.map((order) => (
+                  <OrderList key={order._id} order={order} />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center">
+                    <EmptyState message="No orders found" />
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

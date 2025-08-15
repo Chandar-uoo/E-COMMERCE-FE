@@ -1,6 +1,9 @@
 import axiosInstance from "./axiosInstance";
 
-
+export const userCheckService = async () => {
+    const res = await axiosInstance.get("/user/userCheck");
+    return res.data.result
+}
 export const loginService = async (email, password) => {
         const res = await axiosInstance.post("/auth/login", {
             email,

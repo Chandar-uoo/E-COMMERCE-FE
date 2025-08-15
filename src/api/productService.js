@@ -11,7 +11,7 @@ export const getProduct =  async (id) => {
 }
 export const searchService = async (text) => {
     try {
-        const res = await axiosInstance.get(`/products/search-product?q=${text}`);
+        const res = await axiosInstance.get(`/products/search-product?search=${text}`);
         return res.data.result;
     } catch (err) {
         console.log(err);

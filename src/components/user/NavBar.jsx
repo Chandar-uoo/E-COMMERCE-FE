@@ -30,13 +30,15 @@ const NavBar = () => {
     alert(res);
     nav("/login")
   }
+  
+  
 
   return (
     <div className="navbar bg-neutral text-white shadow-sm px-6 py-2">
       {/* Brand */}
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl text-white">
-          DaisyUI
+        <Link to="/" className="btn btn-ghost text-xl  text-white">
+          RetailX
         </Link>
       </div>
 
@@ -77,8 +79,8 @@ const NavBar = () => {
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full ring ring-cyan-400 ring-offset-base-100 ring-offset-2">
               <img
-                alt="User avatar"
-                 src={user?.image?.trim() ? user.image : userImage}
+                 src={user?.image}
+                 alt={userImage}
               />
             </div>
           </div>
@@ -93,7 +95,6 @@ const NavBar = () => {
                 Profile
               </a>
             </li>
-            <li><a className="hover:bg-gray-800 rounded">Settings</a></li>
             <li><a className="hover:bg-gray-800 rounded" onClick={logout}>Logout</a></li>
           </ul>
         </div>

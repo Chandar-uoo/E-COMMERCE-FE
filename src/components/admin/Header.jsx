@@ -31,7 +31,7 @@ const Header = ({ onMenuClick }) => {
       </div>
 
       <div className="navbar-center">
-        <a onClick={()=>nav("/admin/home")} className="btn btn-ghost text-xl">A - Z commerce</a>
+        <a onClick={()=>nav("/admin/home")} className="btn btn-ghost text-xl">RetailX</a>
       </div>
     <div className="navbar-end pr-2.5">
         <button onClick={logout} className="btn btn-ghost border-cyan-400  hover:bg-cyan-400 hover:text-white ">

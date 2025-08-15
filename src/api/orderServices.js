@@ -3,9 +3,9 @@ import axiosInstance from "./axiosInstance"
         const res =  await axiosInstance.get('/order/read');
         return  res.data.result;
     }
- export const orderMakeService =  async(itemsFromClient,totalPrice)=>{
-    const res = await axiosInstance.post(`/order/process`,{itemsFromClient,totalPrice})
-    return res.data;
+ export const orderMakeService =  async(itemsFromClient)=>{
+    const res = await axiosInstance.post(`/order/process`,{itemsFromClient})
+    return res.data.result;
 }
 
 export  const orderpaymentService = async (orderId,paymentMethod) => {

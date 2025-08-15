@@ -52,7 +52,6 @@ export const DeleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, { getState, rejectWithValue }) => {
     try {
-      console.log(id);
       const data = await deleteProduct(id);
       if (typeof data === "object" && data !== null) {
         const currProducts = getState().products.products;

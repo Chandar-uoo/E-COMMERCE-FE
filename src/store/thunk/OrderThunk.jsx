@@ -1,24 +1,28 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { orderMakeService, orderpaymentService } from "../../api/orderServices";
+import {
+  orderMakeService,
+  orderpaymentService,
+  readOrder,
+} from "../../api/orderServices";
+
+export const readOrders = createAsyncThunk(
+  "order/read",
+  async (_, { rejectWithValue }) => {
+    try {
+      const orders = await readOrder();
+      return orders;
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
 
 export const orderMaking = createAsyncThunk(
   "order/making",
-  async ({ itemsFromClient, totalPrice }, { getState, rejectWithValue }) => {
+  async ({ itemsFromClient }, { rejectWithValue }) => {
     try {
-      const { result, orderId } = await orderMakeService(
-        itemsFromClient,
-        totalPrice
-      );
-      const currentorders = getState().order.order;
-      const updatedorders = [...currentorders];
-      if (typeof result === "object" && result !== null) {
-        updatedorders.push(result);
-      }
-      const uniqueorders = Array.from(
-        new Map(updatedorders.map((item) => [item._id, item])).values()
-      );
-
-      return { uniqueorders, orderId };
+      const  currentOrder = await orderMakeService(itemsFromClient);
+      return currentOrder;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");
     }
@@ -26,22 +30,11 @@ export const orderMaking = createAsyncThunk(
 );
 export const orderpayment = createAsyncThunk(
   "order/payment",
-  async ({ orderId, paymentMethod }, { getState, rejectWithValue }) => {
+  async ({ orderId, paymentMethod }, { rejectWithValue }) => {
     try {
-      const data = await orderpaymentService(orderId, paymentMethod);
-      const currentorder = getState().order.order;
-      const updatedorders = [...currentorder];
-      if (typeof data === "object" && data != null) {
-        // If already existing, do nothing — backend updated quantity
-        const index = updatedorders.findIndex((item) => item._id === data._id);
-        if (index !== -1) {
-          updatedorders[index] = data;
-        }
-      }
-      const uniqueorders = Array.from(
-        new Map(updatedorders.map((item) => [item._id, item])).values()
-      );
-      return uniqueorders;
+      await orderpaymentService(orderId, paymentMethod);
+      const orders = await readOrder();
+      return orders;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");
     }

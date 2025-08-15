@@ -1,43 +1,65 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { orderMaking, orderpayment } from "../thunk/OrderThunk";
+import { orderMaking, orderpayment, readOrders } from "../thunk/OrderThunk";
 
 const initialState = {
   order: [],
-  orderId: null,
+  currentOrder: null,
+  loading: false,
   error: null,
-}
+};
 const OrderSlice = createSlice({
-  name: 'order',
+  name: "order",
   initialState,
   reducers: {
-    addOrders:(state,action)=>{
-      state.order = action.payload;
-    },
-    clearOrder:(state)=>{
+    clearOrder: (state) => {
       state.order = [];
-      state.orderId = null;
+      state.currentOrder = null;
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
-    // order start
-    builder.addCase(orderMaking.rejected, (state, action) => {
-      state.error =  action.payload || "something went wrong"
-    })
-    builder.addCase(orderMaking.fulfilled, (state, action) => {
-      state.order = action.payload.uniqueorders;
-      state.orderId = action.payload.orderId;
-    });
-    // order payment
-    builder.addCase(orderpayment.rejected, (state, action) => {
-      state.error = action.payload || "something went wrong"
-    })
-    builder.addCase(orderpayment.fulfilled, (state, action) => {
-      state.order = action.payload;
-    })
-  }
-
-}
-)
-export const {addOrders,clearOrder} =  OrderSlice.actions;
+    builder
+      // read order
+      .addCase(readOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(readOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.order = action.payload;
+      })
+      .addCase(readOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
+      // order start
+      .addCase(orderMaking.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(orderMaking.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentOrder = action.payload;
+      })
+      .addCase(orderMaking.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "something went wrong";
+      })
+      // order payment
+      .addCase(orderpayment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(orderpayment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.order = action.payload;
+        state.currentOrder = null;
+      })
+      .addCase(orderpayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "something went wrong";
+      });
+  },
+});
+export const {  clearOrder } = OrderSlice.actions;
 export default OrderSlice.reducer;

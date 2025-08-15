@@ -6,12 +6,23 @@ import {
   readCartService,
 } from "../../api/cartServices";
 
+export const readCart = createAsyncThunk(
+  "cart/readCart",
+  async (_, { rejectWithValue }) => {
+    try {
+      const cart = await readCartService();
+      return cart;
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
 // Add product and then fetch updated cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async (productId, { rejectWithValue }) => {
+  async ({ productId, quantity }, { rejectWithValue }) => {
     try {
-      await addToCartService(productId);
+      await addToCartService({ productId, quantity });
       const updatedCart = await readCartService();
       return updatedCart;
     } catch (err) {
@@ -39,6 +50,7 @@ export const deleteFromCart = createAsyncThunk(
   "cart/deleteFromCart",
   async (productId, { rejectWithValue }) => {
     try {
+      
       await deleteCartService(productId);
       const updatedCart = await readCartService();
       return updatedCart;

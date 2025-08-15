@@ -4,6 +4,7 @@ import {
   loginService,
   signupService,
   updatePasswordService,
+  userCheckService,
 } from "../../api/userService";
 
 export const LoginThunkService = createAsyncThunk(
@@ -22,6 +23,17 @@ export const SignUpThunk = createAsyncThunk(
   async (formData, { getState, rejectWithValue }) => {
     try {
       const res = await signupService(formData);
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
+export const CheckUser =  createAsyncThunk(
+  "user/check",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const res = await userCheckService();
       return res;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");

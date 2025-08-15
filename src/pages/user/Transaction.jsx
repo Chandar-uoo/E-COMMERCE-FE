@@ -44,7 +44,7 @@ const Transaction = () => {
             <ShoppingBag className="w-5 h-5 mr-2 text-gray-600" />
             Order Summary
           </h2>
-           <div className="font-semibold text-gray-900"> Total Products : {currorder.items.length}</div>
+           <div className="font-semibold text-gray-900"> Total Products : {currorder?.items.length}</div>
         
           
           <div className="border-t border-gray-200 mt-4 pt-4">

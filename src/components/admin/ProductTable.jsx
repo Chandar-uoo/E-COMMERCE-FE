@@ -78,7 +78,7 @@ const ProductTable = () => {
           <tbody className="divide-y divide-gray-200">
             {products?.map((product) => (
               <tr key={product._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.ProductName}</td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.title}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">$ {product.price}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.stock}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.category}</td>

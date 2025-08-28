@@ -1,4 +1,4 @@
-# 🛒 ShopStack — E-Commerce Frontend (React + Redux Toolkit)
+# 🛒 RetailX — E-Commerce Frontend (React + Redux Toolkit)
 
 A fully functional frontend for an e-commerce application with authentication, cart, admin dashboard, and order handling — built for scalability and real-world workflows.
 
@@ -6,19 +6,20 @@ A fully functional frontend for an e-commerce application with authentication, c
 
 ## 🚀 Features
 
-- 🔐 User Authentication (Login, Signup, JWT, Refresh Tokens)
+-  🔐 User Authentication (Login, Signup, JWT, Refresh Tokens)
 - 🛍️ Product Listing with Cart (Add, Update, Remove)
+- 🗂️ Product Category Filters
 - 💳 Order Placement & Payments
 - 🧑‍💼 Admin Dashboard with:
-  - Product Management (CRUD)
-  - Order Updation
-  - User Management + Search
+- Product Management (CRUD)
+- Order Updation
+- User Management + Search
+- 🔍 Advanced Controls (Filtering / Sorting / Search)
+- 📑 Pagination for Products, Orders, and Users
 - 📦 Role-based Access Control (RBAC)
 - 🔁 Persistent Redux State
 - 🌐 Axios Interceptors + Token Refresh
 - ⚠️ Error + Loading States
-
----
 
 ## 🧪 Tech Stack
 
@@ -30,7 +31,6 @@ A fully functional frontend for an e-commerce application with authentication, c
 - Lucide React Icons
 
 ---
-
 
 ## 📂 Project Structure
 
@@ -71,7 +71,7 @@ npm run dev
 
 ## 📌 Version
 
-Current Version: `v1.0.0` (MVP)
+Current Version: `v1.1.0` (MVP)
 
 - Status: ✅ Stable / Working
 - Last Updated: August 2025
@@ -82,11 +82,10 @@ Current Version: `v1.0.0` (MVP)
 
 These are features that are planned for future versions:
 
-- [ ] ✅ Add **pagination** for product , order listings , user listing
+
 - [ ] ✅ Integrate **payment gateway** (Stripe or Razorpay)
-- [ ] 🔍 Improve **admin controls** (filtering/sorting/search)
 - [ ] 🔐 Add **email verification** on sign up
-- [ ] 📦 Add **product category filters**
+
 
 
 > Contributions welcome! Feel free to fork and improve.
@@ -104,3 +103,4 @@ Chandru V
 💻 GitHub: Chandar-uoo
 
 Feel free to reach out for feedback, questions, or collaboration!
+```

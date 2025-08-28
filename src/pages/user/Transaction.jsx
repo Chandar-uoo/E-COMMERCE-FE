@@ -1,41 +1,70 @@
-import React ,{useState} from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { orderpayment } from '../../store/thunk/OrderThunk';
-import { useNavigate } from 'react-router-dom';
-import ErrorMessage from '../../components/Common/ErrorMessage';
-import { CreditCard, Truck, ShoppingBag, CheckCircle, Loader } from 'lucide-react';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { orderpayment } from "../../store/thunk/OrderThunk";
+import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../../components/Common/ErrorMessage";
+import Loader from "../../components/Common/Loader";
+import {
+  CreditCard,
+  Truck,
+  ShoppingBag,
+  CheckCircle,
+} from "lucide-react";
+
 const Transaction = () => {
   const dispatch = useDispatch();
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const {loading,error} = useSelector((state)=>state.order);
-  const currorder = useSelector((state)=>state.order.currentOrder); 
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const { loading, error } = useSelector((state) => state.order);
+  const currorder = useSelector((state) => state.order.currentOrder);
   const nav = useNavigate();
-    const handlePayment = async () => {
-    if (!paymentMethod) {
-      alert('Please select a payment method');
-      return;
-    }
-    const resultAction = await dispatch(orderpayment({orderId:currorder._id,paymentMethod})) 
-    if(orderpayment.fulfilled.match(resultAction)){
-       nav('/')
-      alert(`Order has been  placed with ${paymentMethod}`);
-    }
+  const [successMsg, setSuccessMsg] = useState("");
+
+  const handlePayment = async () => {
+    if (!paymentMethod) return;
+
+    const resultAction = await dispatch(
+      orderpayment({ orderId: currorder._id, paymentMethod })
+    );
     
+    if (orderpayment.fulfilled.match(resultAction)) {
+      console.log("Payment successful");
+      setSuccessMsg(`Order has been placed with ${paymentMethod}`);
+      setTimeout(() => nav("/"), 3000);
+    }
   };
-  if(loading) return <Loader/>
-  if(error) return <ErrorMessage message={error}/>
- 
-  
- return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+
+  if (error) return <ErrorMessage message={error} />;
+  if (loading) return <Loader />;
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4 relative">
       <div className="max-w-2xl mx-auto">
+        {/* Success Message */}
+        {successMsg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm mx-4">
+              <div className="flex items-center space-x-3">
+                <CheckCircle className="h-10 w-10 text-green-600" />
+                <div>
+                  <h3 className="font-bold text-gray-900 text-lg">Success!</h3>
+                  <p className="text-gray-600">{successMsg}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
             <CreditCard className="w-8 h-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Complete Your Payment</h1>
-          <p className="text-gray-600">Review your order and select a payment method</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Complete Your Payment
+          </h1>
+          <p className="text-gray-600">
+            Review your order and select a payment method
+          </p>
         </div>
 
         {/* Order Summary Card */}
@@ -44,32 +73,41 @@ const Transaction = () => {
             <ShoppingBag className="w-5 h-5 mr-2 text-gray-600" />
             Order Summary
           </h2>
-           <div className="font-semibold text-gray-900"> Total Products : {currorder?.items.length}</div>
-        
-          
+          <div className="font-semibold text-gray-900">
+            Total Products: {currorder?.items.length}
+          </div>
+
           <div className="border-t border-gray-200 mt-4 pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold text-gray-900">Total Amount:</span>
-              <span className="text-2xl font-bold text-blue-600">${currorder?.totalPrice}</span>
+              <span className="text-lg font-semibold text-gray-900">
+                Total Amount:
+              </span>
+              <span className="text-2xl font-bold text-blue-600">
+                ${currorder?.totalPrice}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Payment Method Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Select Payment Method</h2>
-          
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Select Payment Method
+          </h2>
+
           <div className="space-y-3">
-            <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-              paymentMethod === 'cod' 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-            }`}>
+            <label
+              className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                paymentMethod === "cod"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
+              }`}
+            >
               <input
                 type="radio"
                 name="payment"
                 value="cod"
-                checked={paymentMethod === 'cod'}
+                checked={paymentMethod === "cod"}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
               />
@@ -78,22 +116,28 @@ const Transaction = () => {
                   <Truck className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-900">Cash on Delivery</div>
-                  <div className="text-sm text-gray-600">Pay when your order arrives</div>
+                  <div className="font-semibold text-gray-900">
+                    Cash on Delivery
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Pay when your order arrives
+                  </div>
                 </div>
               </div>
             </label>
 
-            <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-              paymentMethod === 'netPay' 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-            }`}>
+            <label
+              className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                paymentMethod === "netPay"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
+              }`}
+            >
               <input
                 type="radio"
                 name="payment"
                 value="netPay"
-                checked={paymentMethod === 'netPay'}
+                checked={paymentMethod === "netPay"}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
               />
@@ -103,7 +147,9 @@ const Transaction = () => {
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900">Net Banking</div>
-                  <div className="text-sm text-gray-600">Secure online payment</div>
+                  <div className="text-sm text-gray-600">
+                    Secure online payment
+                  </div>
                 </div>
               </div>
             </label>
@@ -115,8 +161,12 @@ const Transaction = () => {
           <div className="flex items-center">
             <CheckCircle className="w-5 h-5 text-blue-600 mr-2" />
             <div>
-              <p className="text-sm font-medium text-blue-900">Order Status: {currorder?.orderStatus}</p>
-              <p className="text-sm text-blue-700">Order ID: {currorder?._id?.slice(-8)}</p>
+              <p className="text-sm font-medium text-blue-900">
+                Order Status: {currorder?.orderStatus}
+              </p>
+              <p className="text-sm text-blue-700">
+                Order ID: {currorder?._id?.slice(-8)}
+              </p>
             </div>
           </div>
         </div>
@@ -125,7 +175,13 @@ const Transaction = () => {
         <button
           onClick={handlePayment}
           disabled={!paymentMethod || loading}
-          className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-sm"
+          className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-sm ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : !paymentMethod
+              ? "bg-gray-300 cursor-not-allowed text-gray-500"
+              : "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 hover:shadow-md"
+          }`}
         >
           {loading ? (
             <div className="flex items-center justify-center">
@@ -146,9 +202,6 @@ const Transaction = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Transaction;
-
-
-

@@ -1,25 +1,23 @@
 
-import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../../store/thunk/CartThunk';
 import { useDispatch } from 'react-redux';
-import { getProduct } from '../../api/productService';
-import ErrorMessage from '../Common/ErrorMessage';
+
+import { FetchProductById } from '../../store/thunk/ProductThunk';
 
 const ProductCard = ({ product }) => {
-  const [Error, setError] = useState(null);
+
   const nav = useNavigate();
   const dispatch = useDispatch();
+  
   const veiwProduct = async (id) => {
-    try {
-      const item = await getProduct(id);
-      nav(`/products/${id}`,{state: { item }});
-    } catch (err) {
-      console.log(err.message);
-      setError(err.message);
-    }
+  const result = dispatch(FetchProductById(id));
+  if (!result.error) {
+    nav(`/products/${id}`);
   }
-  if(Error) return <ErrorMessage error={Error}/>
+};
+
+
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden p-4 hover:shadow-xl transition duration-300 w-full sm:w-60">
       <div className="h-40 bg-gray-100 flex items-center justify-center overflow-hidden rounded-xl mb-3">

@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Users, DollarSign, Package } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,37 +10,42 @@ import Loader from "../../components/Common/Loader";
 const AdminHomePage = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const { customers } = useSelector((state) => state.adminUserState);
+  const totalUsers = useSelector(
+    (state) => state.adminUserState.pagination.totalItems
+  );
+  const totalOrders = useSelector(
+    (state) => state.adminOrderState.pagination.totalItems
+  );
+  const totalProducts = useSelector(
+    (state) => state.adminProductState.pagination.totalItems
+  );
   const { orders } = useSelector((state) => state.adminOrderState);
-  /* const { products = [] } = useSelector((state) => state.adminProductState);*/
 
   const nav = useNavigate();
-
-  useEffect(() => {
-    dispatch(FetchOrdersThunk("processing"));
-  }, [dispatch]);
 
   const ordersToShip = orders.filter(
     (order) => order.orderStatus === "processing"
   ).length;
   const fetchAll = async () => {
     setLoading(true);
-    await dispatch(AdminUserThunk(""));
-    await dispatch(FetchOrdersThunk("all"));
-    /* await dispatch(FetchProduct());*/
+    await Promise.all([
+      dispatch(AdminUserThunk({ fetchUser: "" })),
+      dispatch(FetchOrdersThunk({ orderStatus: "all" })),
+      dispatch(FetchProduct({ fetch: "" })),
+    ]);
 
     setLoading(false);
   };
 
-  /*const totalProducts = products.length;*/
-  const totalOrders = orders.length;
-  const totalUsers = customers.length;
-  const totalRevenue = orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2);
+  /* const totalRevenue = orders
+    .reduce((acc, order) => acc + order.totalPrice, 0)
+    .toFixed(2); */
+
   useEffect(() => {
     fetchAll();
   }, []);
- if(loading) {
-    return <Loader />;    
+  if (loading) {
+    return <Loader />;
   }
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -51,7 +56,10 @@ const AdminHomePage = () => {
       <div className="flex justify-end mb-6">
         {/* ✅ Notification Dropdown */}
         <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn bg-black text-green-300 btn-ghost btn-circle">
+          <label
+            tabIndex={0}
+            className="btn bg-black text-green-300 btn-ghost btn-circle"
+          >
             <div className="indicator">
               <svg
                 className="h-5 w-5"
@@ -80,7 +88,7 @@ const AdminHomePage = () => {
               <>
                 <li>
                   <p className="text-sm font-semibold text-white">
-                    You have {ordersToShip} orders to ship.
+                    You have more orders to ship.
                   </p>
                 </li>
                 <li>
@@ -105,8 +113,8 @@ const AdminHomePage = () => {
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        {/* Total Products 
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        {/* Total Products */}
         <div className="bg-white rounded-xl shadow p-6 flex items-center space-x-4 border border-blue-100">
           <div className="bg-blue-100 p-2 rounded-full">
             <ShoppingCart className="w-6 h-6 text-blue-600" />
@@ -115,7 +123,7 @@ const AdminHomePage = () => {
             <p className="text-gray-500 text-sm">Total Products</p>
             <h3 className="text-xl font-bold text-blue-700">{totalProducts}</h3>
           </div>
-        </div>*/}
+        </div>
 
         {/* Total Orders */}
         <div className="bg-white rounded-xl shadow p-6 flex items-center space-x-4 border border-purple-100">
@@ -139,7 +147,7 @@ const AdminHomePage = () => {
           </div>
         </div>
 
-        {/* Total Revenue */}
+        {/* Total Revenue 
         <div className="bg-white rounded-xl shadow p-6 flex items-center space-x-4 border border-yellow-100">
           <div className="bg-yellow-100 p-2 rounded-full">
             <DollarSign className="w-6 h-6 text-yellow-600" />
@@ -150,7 +158,7 @@ const AdminHomePage = () => {
               {totalRevenue}
             </h3>
           </div>
-        </div>
+        </div>*/}
       </div>
 
       {/* Quick Links */}

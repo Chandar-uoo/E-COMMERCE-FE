@@ -75,7 +75,7 @@ export const Profile = () => {
     }
     if (!formData.address?.trim()) newErrors.address = "Address is required";
     if (!formData.DOB) newErrors.DOB = "Date of birth is required";
-
+    if(!formData.image)newErrors.DOB = "image url is required";
     return newErrors;
   };
 
@@ -270,7 +270,10 @@ export const Profile = () => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <form className="space-y-4" onSubmit={(e)=> {
+                e.preventDefault();
+                 submitProfileUpdate()
+              }}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name
@@ -371,20 +374,20 @@ export const Profile = () => {
                   )}
                 </div>
 
-                {(errors.general || error) && (
+                {(  error|| errors.general) && (
                   <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                    {errors.general || error}
+                    {error|| errors.general}
                   </div>
                 )}
 
                 <button
-                  onClick={submitProfileUpdate}
+                 type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center"
                 >
                   <Save className="w-4 h-4 mr-2" />
                   Save Changes
                 </button>
-              </div>
+              </form>
             )}
           </div>
 
@@ -506,9 +509,9 @@ export const Profile = () => {
                   )}
                 </div>
 
-                {(errors.general || error) && (
+                {(error|| errors.general) && (
                   <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                    {errors.general || error}
+                    {error|| errors.general}
                   </div>
                 )}
 

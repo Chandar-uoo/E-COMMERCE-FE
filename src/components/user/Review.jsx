@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import EmptyState from "../Common/EmptyState";
 import { postReviewService } from "../../api/reviewService";
 import { useSelector } from "react-redux";
+import Loader from "../Common/Loader";
 
 
 
@@ -14,6 +15,8 @@ export const Review = ({ item, calculateAverageRating }) => {
   });
   const [writeReview, setwriteReview] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [loading, setloading] = useState(false);
+  
    useEffect(() => {
     if (user && reviews.some((review) => review.user._id === user.id)) {
       setwriteReview(true);
@@ -21,6 +24,7 @@ export const Review = ({ item, calculateAverageRating }) => {
   }, [reviews, user]);
   const handleAddReview = async () => {
     if (newReview.comment.trim()) {
+      setloading(true);
       const review = await postReviewService({
         id: item._id,
         rating: newReview.rating,
@@ -30,6 +34,7 @@ export const Review = ({ item, calculateAverageRating }) => {
       setwriteReview(true);
       setNewReview({ rating: 5, comment: "" });
       setShowReviewForm(false);
+      setloading(false)
     }
   };
 
@@ -40,7 +45,7 @@ export const Review = ({ item, calculateAverageRating }) => {
     });
     return distribution;
   };
-
+if(loading) return <Loader/>
   return (
     <div>
       <div className="bg-gray-50 rounded-xl p-6">

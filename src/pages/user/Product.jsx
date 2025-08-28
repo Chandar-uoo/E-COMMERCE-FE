@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import { useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../store/thunk/CartThunk";
 import { orderMaking } from "../../store/thunk/OrderThunk";
@@ -9,27 +9,33 @@ import { Review } from "../../components/user/Review";
 import Loader from "../../components/Common/Loader";
 
 const Product = () => {
-  const { id } = useParams();
-  const location = useLocation();
-  const { item } = location.state || {};
   const dispatch = useDispatch();
   const nav = useNavigate();
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(item?.images?.[0] || "");
+  
 
   // Review state
 
-
+  const { selectedProduct:item ,loading,error,refreshing} = useSelector((state)=> state.products);
   const errorResult = useSelector((state) => state.order.error);
   const cartLoading = useSelector((state) => state.cart.loading);
   const orderLoading = useSelector((state) => state.order.loading);
+
+const [selectedImage, setSelectedImage] = useState("");
+
+// whenever product changes, reset selectedImage to first image
+useEffect(() => {
+  if (item?.images?.length > 0) {
+    setSelectedImage(item.images[0]);
+  }
+}, [item]);
 
  
 
   const process = async () => {
     const resultAction = await dispatch(
       orderMaking({
-        itemsFromClient: [{ productId: id, quantity }],
+        itemsFromClient: [{ productId: item._id, quantity }],
       })
     );
 
@@ -69,15 +75,16 @@ const Product = () => {
       setQuantity((prev) => prev - 1);
     }
   };
-if(cartLoading|| orderLoading){
-  return <Loader/>
+if (loading || refreshing || cartLoading || orderLoading) {
+  return <Loader />;
 }
+
 
   if (!item) {
     return <EmptyState message="Product not found." />;
   }
 
-  if (errorResult) {
+  if (errorResult || error) {
     return <ErrorMessage error={errorResult} />;
   }
 
@@ -109,7 +116,7 @@ if(cartLoading|| orderLoading){
                         src={img}
                         alt={`${item.title} ${index + 1}`}
                         onClick={() => setSelectedImage(img)}
-                        className={`w-full h-24 object-cover rounded-lg border cursor-pointer transition-transform duration-300 hover:scale-105 ${
+                        className={`w-full h-24 object-cover rounded-lg border text-black cursor-pointer transition-transform duration-300 hover:scale-105 ${
                           selectedImage === img
                             ? "border-blue-500"
                             : "border-gray-200"

@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Search, Eye, Edit } from "lucide-react";
+import { Search, Eye, Edit, MoveRight, MoveLeft } from "lucide-react";
 import Loader from "../../components/Common/Loader";
 import { AdminUserThunk } from "../../store/AdminThunk/AdminUserThunk";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorMessage from "../../components/Common/ErrorMessage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import EmptyState from "../../components/Common/EmptyState";
+import usePagination from "../../hooks/usePagination";
+
 const Customers = () => {
   const [user, setuser] = useState("");
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const { customers, error, loading } = useSelector(
+  const [_, setsearchParams] = useSearchParams();
+  const { customers, error, loading, pagination } = useSelector(
     (state) => state.adminUserState
   );
   const fetchCustomers = async () => {
-    await dispatch(AdminUserThunk(user));
+    await dispatch(AdminUserThunk({ fetchUser: user }));
+    const queryString = new URLSearchParams({
+      fetchUser: user,
+      page: 1,
+    }).toString();
+    setsearchParams(queryString);
   };
   useEffect(() => {
     fetchCustomers();
@@ -27,6 +35,20 @@ const Customers = () => {
       console.log(err.message);
     }
   };
+  const { nextPage, prevPage } = usePagination();
+  const next = () => {
+    if (pagination.hasNextPage) {
+      const updatedParams = nextPage(); // Get the updated params
+      dispatch(AdminUserThunk(updatedParams.toString()));
+    }
+  };
+
+  const prev = () => {
+    if (pagination.hasPrevPage) {
+      const updatedParams = prevPage(); // Get the updated params
+      dispatch(AdminUserThunk(updatedParams.toString()));
+    }
+  };
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
   return (
@@ -34,19 +56,22 @@ const Customers = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Customers</h2>
         {/*search custome -- future */}
-        <div className="relative">
+        <form className="relative" onSubmit={(e)=>{
+          e.preventDefault();
+          fetchCustomers();
+        }}>
           <Search
-            onClick={fetchCustomers}
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-4 h-4"
           />
           <input
             type="text"
             value={user}
             onChange={(e) => setuser(e.target.value)}
+            required
             placeholder="Search customers..."
             className="pl-10 pr-4 py-2 border border-gray-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
+        </form>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -61,13 +86,7 @@ const Customers = () => {
                   Email
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Orders
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Total Spent
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Actions
+                  veiw
                 </th>
               </tr>
             </thead>
@@ -91,9 +110,6 @@ const Customers = () => {
                             className="w-4 h-4"
                           />
                         </button>
-                        <button className="text-green-600 hover:text-green-800">
-                          <Edit className="w-4 h-4" />
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -108,6 +124,26 @@ const Customers = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="flex justify-center-safe gap-4  px-4">
+        {pagination.hasPrevPage && (
+          <button
+            onClick={prev}
+            className="join-item  btn btn-outline bg-black w"
+          >
+            <MoveLeft />
+            Prev
+          </button>
+        )}
+        {pagination.hasNextPage && (
+          <button
+            onClick={next}
+            className="join-item btn btn-outline bg-black "
+          >
+            Next
+            <MoveRight />
+          </button>
+        )}
       </div>
     </div>
   );

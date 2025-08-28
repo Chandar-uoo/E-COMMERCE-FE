@@ -4,6 +4,14 @@ const OrderSlice =  createSlice({
     name: "adminOrder",
     initialState: { 
         orders: [],
+        pagination:{
+             totalItems: 0,
+          totalPages:0,
+          currentPage: 0,
+          limit: 0,
+          hasNextPage:false,
+          hasPrevPage:false,
+        },
         loading: false,     
         error: null
     },  
@@ -16,7 +24,8 @@ const OrderSlice =  createSlice({
             })
             .addCase( FetchOrdersThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                state.orders = action.payload;
+                state.orders = action.payload.data;
+                state.pagination =  action.payload.pagination;
             })
             .addCase( FetchOrdersThunk.rejected, (state, action) => {
                 state.loading = false;

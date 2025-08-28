@@ -6,9 +6,10 @@ import {
 
 export const FetchOrdersThunk = createAsyncThunk(
   "admin/fetchOrders",
-  async (status, { rejectWithValue }) => {
+  async (statusObj, { rejectWithValue }) => {
     try {
-      const response = await fetchOrders(status);
+      const query = new URLSearchParams (statusObj)
+      const response = await fetchOrders(query);
       return response;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");

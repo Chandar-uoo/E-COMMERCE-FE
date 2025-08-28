@@ -5,19 +5,43 @@ import Loader from "../../components/Common/Loader";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { OrderList } from "../../components/admin/OrderList";
 import EmptyState from "../../components/Common/EmptyState";
+import usePagination from "../../hooks/usePagination";
+import { useSearchParams } from "react-router-dom";
+import { MoveRight, MoveLeft } from "lucide-react";
 
 const Order = () => {
-  const { orders, loading, error } = useSelector(
+  const { orders, loading, error, pagination } = useSelector(
     (state) => state.adminOrderState
   );
   const dispatch = useDispatch();
   const [status, setstatus] = useState("all");
+  const [_, setsearchParams] = useSearchParams();
+  
   const fetchOrders = async () => {
-    await dispatch(FetchOrdersThunk(status));
+    await dispatch(FetchOrdersThunk({ orderStatus: status }));
+    const queryString = new URLSearchParams({
+      orderStatus: status,
+      page: 1,
+    }).toString();
+    setsearchParams(queryString);
   };
   useEffect(() => {
     fetchOrders();
   }, [status]);
+  const { nextPage, prevPage } = usePagination();
+  const next = () => {
+    if (pagination.hasNextPage) {
+      const updatedParams = nextPage(); // Get the updated params
+      dispatch(FetchOrdersThunk(updatedParams.toString()));
+    }
+  };
+
+  const prev = () => {
+    if (pagination.hasPrevPage) {
+      const updatedParams = prevPage(); // Get the updated params
+      dispatch(FetchOrdersThunk(updatedParams.toString()));
+    }
+  };
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
 
@@ -83,6 +107,26 @@ const Order = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="flex justify-center-safe gap-4  px-4">
+        {pagination.hasPrevPage && (
+          <button
+            onClick={prev}
+            className="join-item  btn btn-outline bg-black w"
+          >
+            <MoveLeft />
+            Prev
+          </button>
+        )}
+        {pagination.hasNextPage && (
+          <button
+            onClick={next}
+            className="join-item btn btn-outline bg-black "
+          >
+            Next
+            <MoveRight />
+          </button>
+        )}
       </div>
     </div>
   );

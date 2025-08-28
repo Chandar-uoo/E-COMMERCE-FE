@@ -12,7 +12,7 @@ export const OrderList = ({ order }) => {
   const [edit, setedit] = useState(false);
   const updateStatus = async (orderId) => {
     await dispatch(UpdateOrderStatusThunk(orderId));
-    await dispatch(FetchOrdersThunk("all"));
+    await dispatch(FetchOrdersThunk({ orderStatus:"all",page:1 }));
     setedit(false);
   };
   const veiwOrder = async (order) => {

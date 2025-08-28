@@ -1,8 +1,8 @@
 import axiosInstance from "../../api/axiosInstance"
 
 
-export const fetchOrders =  async(Status)=>{
-        const res = await axiosInstance.get(`/admin/orders?orderStatus=${Status}`);
+export const fetchOrders =  async(query)=>{
+        const res = await axiosInstance.get(`/admin/orders?${query}`);
         return res.data.result;
 }
 

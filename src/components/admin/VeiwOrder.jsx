@@ -202,7 +202,7 @@ const ViewOrder = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons 
             <div className="mt-8 pt-6 border-t border-gray-100">
               <div className="flex flex-wrap gap-3">
                 <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
@@ -215,7 +215,7 @@ const ViewOrder = () => {
                   ✏️ Edit Order
                 </button>
               </div>
-            </div>
+            </div>*/}
           </div>
         </div>
       </div>

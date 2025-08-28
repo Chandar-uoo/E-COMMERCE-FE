@@ -3,14 +3,28 @@ import {
   addProduct,
   deleteProduct,
   fetchProducts,
+  filterProducts,
   updateProduct,
 } from "../../api/AdminApi's/adminServices";
 
 export const FetchProduct = createAsyncThunk(
   "products/fetch",
-  async (text, {  rejectWithValue }) => {
+  async (productObj, {  rejectWithValue }) => {
     try {
-      const data = await fetchProducts(text);
+      const query =  new URLSearchParams (productObj)
+      const data = await fetchProducts(query);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
+export const FilterProduct = createAsyncThunk(
+  "products/filter",
+  async (productObj, {  rejectWithValue }) => {
+    try {
+      const query =  new URLSearchParams (productObj)
+      const data = await filterProducts(query);
       return data;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");

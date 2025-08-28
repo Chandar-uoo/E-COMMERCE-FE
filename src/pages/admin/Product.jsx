@@ -1,11 +1,29 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
-import ProductTable from '../../components/admin/ProductTable';
-import { useNavigate } from 'react-router-dom';
-
+import React from "react";
+import { MoveRight,MoveLeft, Plus } from "lucide-react";
+import ProductTable from "../../components/admin/ProductTable";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import usePagination from "../../hooks/usePagination";
+import { FetchProduct } from "../../store/AdminThunk/ProductThunk";
 
 const Products = () => {
-const nav = useNavigate();
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  const { pagination } = useSelector((state) => state.adminProductState);
+
+  const { nextPage, prevPage } = usePagination();
+  const next = () => {
+    if (pagination.hasNextPage) {
+      const updatedParams = nextPage(); // Get the updated params
+      dispatch(FetchProduct(updatedParams.toString()));
+    }
+  };
+  const prev = () => {
+    if (pagination.hasPrevPage) {
+      const updatedParams = prevPage(); // Get the updated params
+      dispatch(FetchProduct(updatedParams.toString()));
+    }
+  };
 
   return (
     <div className="space-y-6 p-4">
@@ -20,11 +38,30 @@ const nav = useNavigate();
         </button>
       </div>
 
-
       {/* Product List */}
 
-        <ProductTable />
-     
+      <ProductTable />
+      {/*pagination */}
+      <div className="flex justify-center-safe gap-4  px-4">
+        {pagination.hasPrevPage && (
+          <button
+            onClick={prev}
+            className="join-item  btn btn-outline bg-black w"
+          >
+            <MoveLeft />
+            Prev
+          </button>
+        )}
+        {pagination.hasNextPage && (
+          <button
+            onClick={next}
+            className="join-item btn btn-outline bg-black "
+          >
+            Next
+            <MoveRight />
+          </button>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,10 +1,15 @@
 import axiosInstance from "../../api/axiosInstance"
 
 
-export const fetchProducts =  async(text)=>{
-        const res = await axiosInstance.get(`/admin/products?fetch=${text}`);
+export const fetchProducts =  async(query)=>{
+        const res = await axiosInstance.get(`/admin/products?${query}`);
         return res.data.result;
 }
+export const filterProducts =  async(query)=>{
+        const res = await axiosInstance.get(`/admin/filter?${query}`);
+        return res.data.result;
+}
+
 
 export const addProduct =  async( updateFields)=>{
      const res = await  axiosInstance.post("/admin/add-product",{ updateFields});

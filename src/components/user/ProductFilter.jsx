@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 import {
   X,
   Filter,
@@ -10,7 +10,6 @@ import { SearchProduct } from "../../store/thunk/ProductThunk";
 
 const ProductFilter = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const nav = useNavigate();
    const [searchParams,setSearchParams] = useSearchParams();
 
   // State for filter options
@@ -209,9 +208,9 @@ const ProductFilter = ({ isOpen, onClose }) => {
               onChange={(e) => handleFilterChange("stock", e.target.value)}
             >
               <option value="">All Stock Status</option>
-              <option value="instock">In Stock</option>
-              <option value="outofstock">Out of Stock</option>
-              <option value="lowstock">Low Stock</option>
+              <option value="In Stock">In Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+              <option value="Low Stock">Low Stock</option>
             </select>
           </div>
 

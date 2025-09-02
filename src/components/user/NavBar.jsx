@@ -37,6 +37,8 @@ const NavBar = () => {
     nav("/login");
   };
 
+  
+
   return (
     <div className="navbar bg-neutral text-white shadow-sm px-6 py-2">
       {/* Brand */}
@@ -107,7 +109,7 @@ const NavBar = () => {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full ring ring-cyan-400 ring-offset-base-100 ring-offset-2">
-              <img src={user?.image} alt={userImage} />
+              <img src ={user?.image ||userImage } alt={user?.name || "user"} />
             </div>
           </div>
 

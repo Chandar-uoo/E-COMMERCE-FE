@@ -88,7 +88,6 @@ const ProductForm = ({ isUpdate, initialData }) => {
   };
 
   
-  const brands = ["Apple", "Samsung", "Nike", "Adidas", "Sony", "LG", "Other"];
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -175,19 +174,12 @@ const ProductForm = ({ isUpdate, initialData }) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Brand
                   </label>
-                  <select
+                  <input
                     value={formData.brand}
                     onChange={handleChange("brand")}
                     className="w-full px-4 py-3 border  text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     required
-                  >
-                    <option value="">Select Brand</option>
-                    {brands.map((brand) => (
-                      <option key={brand} value={brand}>
-                        {brand}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

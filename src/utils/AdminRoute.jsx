@@ -2,7 +2,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import Loader from "../components/Common/Loader";
-import ErrorMessage from "../components/Common/ErrorMessage";
 const AdminRoute = ({ children }) => {
   const { user, loading, error } = useSelector((state) => state.user);
   const nav = useNavigate();

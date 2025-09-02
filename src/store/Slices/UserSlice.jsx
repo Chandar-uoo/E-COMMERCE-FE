@@ -23,12 +23,8 @@ const UserSlice = createSlice({
       state.token = null;
       state.error = null;
     },
-    updateUserDetails:(state,action)=>{
-      state.user.name = action.payload?.name;
-      state.user.DOB = action.payload?.DOB;
-      state.user.address = action.payload?.address;
-      state.user.phoneNo = action.payload?.phoneNo;
-      state.user.image = action.payload?.image;
+    clearError:(state)=>{
+      state.error =  null;
     }
   },
   extraReducers:(builder)=>{
@@ -102,6 +98,6 @@ const UserSlice = createSlice({
   }
 })
 
-export const {adduser,setAccessToken,clearUser,updateUserDetails } = UserSlice.actions;
+export const {adduser,setAccessToken,clearUser,clearError } = UserSlice.actions;
 export default UserSlice.reducer;
 

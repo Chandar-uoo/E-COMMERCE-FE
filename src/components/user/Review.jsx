@@ -199,7 +199,7 @@ if(loading) return <Loader/>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
+                        {[...Array(review.rating)].map((_, i) => (
                           <span
                             key={i}
                             className={

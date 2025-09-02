@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../Common/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,6 +20,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import userImage from "../../assets/default-img.jpg";
+import { clearError } from "../../store/Slices/UserSlice";
 
 export const Profile = () => {
   const { user, loading, error } = useSelector((state) => state.user);
@@ -154,6 +155,15 @@ export const Profile = () => {
     }
     return age;
   };
+useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => {
+      setErrors({})
+      dispatch(clearError());
+    }, 3000); // auto-clear after 3s
+    return () => clearTimeout(timer);
+  }
+}, [error,errors]);
 
   if (loading) {
     return <Loader />;
@@ -202,6 +212,7 @@ export const Profile = () => {
             <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
               <button
                 onClick={() => setEditProfile(!editProfile)}
+                disabled={editPassword}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
               >
                 {editProfile ? (
@@ -211,17 +222,7 @@ export const Profile = () => {
                 )}
                 {editProfile ? "Cancel" : "Edit Profile"}
               </button>
-              <button
-                onClick={() => setEditPassword(!editPassword)}
-                className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors shadow-sm"
-              >
-                {editPassword ? (
-                  <X className="w-4 h-4 mr-2" />
-                ) : (
-                  <Lock className="w-4 h-4 mr-2" />
-                )}
-                {editPassword ? "Cancel" : "Change Password"}
-              </button>
+           
             </div>
           </div>
         </div>
@@ -406,6 +407,7 @@ export const Profile = () => {
                 </p>
                 <button
                   onClick={() => setEditPassword(true)}
+                  disabled={editProfile}
                   className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
                 >
                   <Lock className="w-4 h-4 mr-2" />

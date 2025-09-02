@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SignUpThunk } from "../../store/thunk/UserThunk";
@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   CheckCircle
 } from "lucide-react";
+import { clearError } from "../../store/Slices/UserSlice";
 
 const SignUp = () => {
   const nav = useNavigate();
@@ -33,7 +34,6 @@ const SignUp = () => {
     email: '',
     address: '',
     DOB: '',
-    image: '',
     gender: '',
     phoneNo: '',
     password: '',
@@ -62,9 +62,18 @@ const SignUp = () => {
   const goToLogin = () => {
     nav('/login');
   };
+useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => {
+      dispatch(clearError());
+    }, 3000); // auto-clear after 3s
+    return () => clearTimeout(timer);
+  }
+}, [error]);
+
 
   const isStep1Valid = formData.name && formData.email && formData.password;
-  const isStep2Valid = formData.phoneNo && formData.address && formData.DOB;
+  const isStep2Valid = formData.phoneNo && formData.address && formData.DOB&&formData.gender;
 
   if (loading && !isSubmitting) {
     return (
@@ -101,8 +110,8 @@ const SignUp = () => {
 
           {/* Progress Steps */}
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-4 w-full">
-              {[1, 2, 3].map((step) => (
+            <div className="flex items-center space-x-3 w-full">
+              {[1, 2].map((step) => (
                 <div key={step} className="flex items-center flex-1">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300 ${
                     currentStep >= step 
@@ -111,8 +120,8 @@ const SignUp = () => {
                   }`}>
                     {currentStep > step ? <CheckCircle className="w-5 h-5" /> : step}
                   </div>
-                  {step < 3 && (
-                    <div className={`flex-1 h-1 mx-3 transition-all duration-300 ${
+                  {step < 2 && (
+                    <div className={`flex-1 h-1 mx-4 transition-all duration-300 ${
                       currentStep > step ? 'bg-blue-500' : 'bg-gray-300'
                     }`}></div>
                   )}
@@ -272,6 +281,7 @@ const SignUp = () => {
                       name="gender"
                       className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 appearance-none"
                       value={formData.gender}
+                      required
                       onChange={handleChange}
                     >
                       <option value="">Select Gender</option>
@@ -284,42 +294,7 @@ const SignUp = () => {
               </div>
             )}
 
-            {/* Step 3 */}
-            {currentStep === 3 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Optional Information</h3>
-                
-                {/* Profile Image */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Profile Image URL (Optional)</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <ImageIcon className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="url"
-                      name="image"
-                      className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300"
-                      placeholder="https://example.com/your-image.jpg"
-                      value={formData.image}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500">You can add a profile image later if you prefer</p>
-                </div>
-
-                {/* Summary */}
-                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-                  <h4 className="font-semibold text-blue-600 mb-3">Account Summary</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div><span className="text-gray-600">Name:</span> <span className="text-gray-800">{formData.name || 'Not set'}</span></div>
-                    <div><span className="text-gray-600">Email:</span> <span className="text-gray-800">{formData.email || 'Not set'}</span></div>
-                    <div><span className="text-gray-600">Phone:</span> <span className="text-gray-800">{formData.phoneNo || 'Not set'}</span></div>
-                    <div><span className="text-gray-600">Gender:</span> <span className="text-gray-800">{formData.gender || 'Not set'}</span></div>
-                  </div>
-                </div>
-              </div>
-            )}
+           
 
             {/* Error */}
             {error && (
@@ -341,7 +316,7 @@ const SignUp = () => {
                 </button>
               )}
 
-              {currentStep < 3 ? (
+              {currentStep < 2 ? (
                 <button
                   type="button"
                   onClick={() => setCurrentStep(currentStep + 1)}

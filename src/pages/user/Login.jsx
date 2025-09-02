@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginThunkService } from "../../store/thunk/UserThunk";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { Loader, Eye, EyeOff, Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
+import { clearError } from "../../store/Slices/UserSlice";
 
 const Login = () => {
   const [email, setemail] = useState("");
@@ -39,6 +40,15 @@ const Login = () => {
     e.preventDefault();
     loginuser();
   };
+  useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => {
+      dispatch(clearError());
+    }, 2500); // auto-clear after 3s
+    return () => clearTimeout(timer);
+  }
+}, [error]);
+
 
   if (loading && !isSubmitting) {
     return (

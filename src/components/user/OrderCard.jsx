@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { getProduct } from "../../api/productService";
 import { useDispatch, useSelector } from "react-redux";
 import { orderMaking } from "../../store/thunk/OrderThunk";
 import ErrorMessage from "../Common/ErrorMessage";
+import { FetchProductById } from "../../store/thunk/ProductThunk";
 
 const OrderCard = ({ item }) => {
   const nav = useNavigate();
@@ -10,12 +10,10 @@ const OrderCard = ({ item }) => {
   const errorResult = useSelector((state) => state.order.error);
 
   const veiwProduct = async (id) => {
-    try {
-      const item = await getProduct(id);
-      nav(`/products/${id}`, { state: { item } });
-    } catch (err) {
-      console.log(err.message);
-    }
+  const result = dispatch(FetchProductById(id));
+  if (!result.error) {
+    nav(`/products/${id}`);
+  }
   };
 
   const process = async (product) => {

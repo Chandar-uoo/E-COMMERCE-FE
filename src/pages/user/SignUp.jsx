@@ -1,79 +1,111 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { SignUpThunk } from "../../store/thunk/UserThunk";
+import {
+  OtpemailThunk,
+  OtpemailVerifyThunk,
+  SignUpThunk,
+} from "../../store/thunk/UserThunk";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import Loader from "../../components/Common/Loader";
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Image as ImageIcon, 
-  Users, 
-  Eye, 
-  EyeOff, 
+import {
+  User,
+  Mail,
+  Lock,
+  Phone,
+  MapPin,
+  Calendar,
+  Image as ImageIcon,
+  Users,
+  Eye,
+  EyeOff,
   UserPlus,
   ArrowLeft,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { clearError } from "../../store/Slices/UserSlice";
+import Timer from "otp-timer";
 
 const SignUp = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const { user, error, loading } = useSelector((state) => state.user);
+  const { error, loading } = useSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-
+  const [showOtpForm, setshowOtpForm] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // New state to track email verification
+  const [otp, setotp] = useState("");
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    DOB: '',
-    gender: '',
-    phoneNo: '',
-    password: '',
+    name: "",
+    email: "",
+    address: "",
+    DOB: "",
+    gender: "",
+    phoneNo: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Reset email verification if email changes
+    if (name === "email") {
+      setIsEmailVerified(false);
+      setshowOtpForm(false);
+      setotp("");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    try {
-      await dispatch(SignUpThunk(formData));
-      setTimeout(() => {
-        if (user) nav('/');
-        setIsSubmitting(false);
-      }, 500);
-    } catch (err) {
-      setIsSubmitting(false);
-    }
+    const res = await dispatch(SignUpThunk(formData)).unwrap();
+    if (res) nav("/");
+    setIsSubmitting(false);
   };
 
   const goToLogin = () => {
-    nav('/login');
+    nav("/");
   };
-useEffect(() => {
-  if (error) {
-    const timer = setTimeout(() => {
-      dispatch(clearError());
-    }, 3000); // auto-clear after 3s
-    return () => clearTimeout(timer);
-  }
-}, [error]);
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        dispatch(clearError());
+      }, 3000); // auto-clear after 3s
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
-  const isStep1Valid = formData.name && formData.email && formData.password;
-  const isStep2Valid = formData.phoneNo && formData.address && formData.DOB&&formData.gender;
+  const Verifyotp = async (e) => {
+    e.preventDefault(); // Prevent form submission
+    try {
+      await dispatch(OtpemailVerifyThunk({otp, email: formData.email})).unwrap();
+      // If verification is successful, hide OTP form and mark email as verified
+      setshowOtpForm(false);
+      setIsEmailVerified(true);
+      setotp(""); // Clear OTP input
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+    }
+  };
+
+  const sendEmailOtp = async (e) => {
+    e.preventDefault(); // Prevent form submission
+    try {
+      await dispatch(OtpemailThunk({email: formData.email}));
+      setshowOtpForm(true);
+      setIsEmailVerified(false);
+      setotp(""); // Clear previous OTP
+    } catch (error) {
+      console.error("Failed to send OTP:", error);
+    }
+  };
+
+  const isStep1Valid = formData.name && formData.email && formData.password && isEmailVerified;
+  const isStep2Valid = formData.phoneNo && formData.address && formData.DOB && formData.gender;
 
   if (loading && !isSubmitting) {
     return (
@@ -113,17 +145,25 @@ useEffect(() => {
             <div className="flex items-center space-x-3 w-full">
               {[1, 2].map((step) => (
                 <div key={step} className="flex items-center flex-1">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300 ${
-                    currentStep >= step 
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' 
-                      : 'bg-gray-200 text-gray-500'
-                  }`}>
-                    {currentStep > step ? <CheckCircle className="w-5 h-5" /> : step}
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300 ${
+                      currentStep >= step
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                  >
+                    {currentStep > step ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      step
+                    )}
                   </div>
                   {step < 2 && (
-                    <div className={`flex-1 h-1 mx-4 transition-all duration-300 ${
-                      currentStep > step ? 'bg-blue-500' : 'bg-gray-300'
-                    }`}></div>
+                    <div
+                      className={`flex-1 h-1 mx-4 transition-all duration-300 ${
+                        currentStep > step ? "bg-blue-500" : "bg-gray-300"
+                      }`}
+                    ></div>
                   )}
                 </div>
               ))}
@@ -135,11 +175,15 @@ useEffect(() => {
             {/* Step 1 */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Basic Information</h3>
-                
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                  Basic Information
+                </h3>
+
                 {/* Name */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Full Name</label>
+                  <label className="text-sm font-medium text-gray-700 block">
+                    Full Name
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <User className="h-5 w-5 text-gray-400" />
@@ -157,8 +201,10 @@ useEffect(() => {
                 </div>
 
                 {/* Email */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Email Address</label>
+                <div className="space-y-2 relative">
+                  <label className="text-sm font-medium text-gray-700 block">
+                    Email Address
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <Mail className="h-5 w-5 text-gray-400" />
@@ -166,18 +212,88 @@ useEffect(() => {
                     <input
                       type="email"
                       name="email"
-                      className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300"
+                      className={`w-full pl-12 pr-4 py-3 bg-white border rounded-xl text-gray-800 placeholder-gray-400 focus:ring-2 focus:outline-none transition-all duration-300 ${
+                        isEmailVerified 
+                          ? "border-green-300 focus:border-green-500 focus:ring-green-500/20" 
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      }`}
                       placeholder="Enter your email"
                       value={formData.email}
                       onChange={handleChange}
                       required
                     />
+                    {isEmailVerified && (
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* Email Verification Status */}
+                  {isEmailVerified && (
+                    <p className="text-sm text-green-600 flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4" />
+                      Email verified successfully
+                    </p>
+                  )}
+                  
+                  {/* Verify Button - Show only if email is not verified and OTP form is not shown */}
+                  {!isEmailVerified && !showOtpForm && formData.email && (
+                    <button
+                      type="button"
+                      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+                      onClick={sendEmailOtp}
+                    >
+                      Verify Email
+                    </button>
+                  )}
+                  
+                  {/* OTP Form */}
+                  {showOtpForm && !isEmailVerified && (
+                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="flex flex-col gap-3">
+                        <p className="text-sm text-gray-600">
+                          Enter the OTP sent to {formData.email}
+                        </p>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-sm font-medium text-gray-700">OTP</label>
+                          <input
+                            type="text"
+                            value={otp}
+                            onChange={(e) => setotp(e.target.value)}
+                            maxLength={6}
+                            className="w-32 px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                            placeholder="Enter OTP"
+                          />
+                        </div>
+                        <Timer text={"OTP expires in"} seconds={59} minutes={4} />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={sendEmailOtp}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm"
+                          >
+                            Resend OTP
+                          </button>
+                          <button
+                            type="button"
+                            onClick={Verifyotp}
+                            disabled={!otp || otp.length < 4}
+                            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition text-sm"
+                          >
+                            Verify OTP
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Password</label>
+                  <label className="text-sm font-medium text-gray-700 block">
+                    Password
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <Lock className="h-5 w-5 text-gray-400" />
@@ -210,12 +326,16 @@ useEffect(() => {
             {/* Step 2 */}
             {currentStep === 2 && (
               <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Personal Details</h3>
-                
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                  Personal Details
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Phone */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 block">Phone Number</label>
+                    <label className="text-sm font-medium text-gray-700 block">
+                      Phone Number
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <Phone className="h-5 w-5 text-gray-400" />
@@ -234,7 +354,9 @@ useEffect(() => {
 
                   {/* Date of Birth */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 block">Date of Birth</label>
+                    <label className="text-sm font-medium text-gray-700 block">
+                      Date of Birth
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <Calendar className="h-5 w-5 text-gray-400" />
@@ -253,7 +375,9 @@ useEffect(() => {
 
                 {/* Address */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Address</label>
+                  <label className="text-sm font-medium text-gray-700 block">
+                    Address
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <MapPin className="h-5 w-5 text-gray-400" />
@@ -272,7 +396,9 @@ useEffect(() => {
 
                 {/* Gender */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 block">Gender</label>
+                  <label className="text-sm font-medium text-gray-700 block">
+                    Gender
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <Users className="h-5 w-5 text-gray-400" />
@@ -293,8 +419,6 @@ useEffect(() => {
                 </div>
               </div>
             )}
-
-           
 
             {/* Error */}
             {error && (
@@ -350,7 +474,7 @@ useEffect(() => {
           {/* Footer */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 text-sm mb-4">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 type="button"
                 onClick={goToLogin}
@@ -360,7 +484,8 @@ useEffect(() => {
               </button>
             </p>
             <p className="text-xs text-gray-500">
-              By creating an account, you agree to our Terms of Service and Privacy Policy
+              By creating an account, you agree to our Terms of Service and
+              Privacy Policy
             </p>
           </div>
         </div>

@@ -1,103 +1,132 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LoginThunkService, SignUpThunk, UpdateUserDetailsThunk, UpdateUserPasswordThunk,CheckUser} from "../thunk/UserThunk";
-
+import {
+  LoginThunkService,
+  SignUpThunk,
+  UpdateUserDetailsThunk,
+  UpdateUserPasswordThunk,
+  CheckUser,
+  OtpemailThunk,
+  OtpemailVerifyThunk,
+} from "../thunk/UserThunk";
 
 const initialState = {
-  loading:false,
+  loading: false,
   user: null,
   error: null,
-  token:null,
+  token: null,
 };
 const UserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    adduser:(state,action)=>{
-      state.user =  action.payload
+    adduser: (state, action) => {
+      state.user = action.payload;
     },
-    setAccessToken:(state,action)=>{
-      state.token =  action.payload
+    setAccessToken: (state, action) => {
+      state.token = action.payload;
     },
-    clearUser:(state)=>{    
+    clearUser: (state) => {
       state.user = null;
       state.token = null;
       state.error = null;
     },
-    clearError:(state)=>{
-      state.error =  null;
-    }
+    clearError: (state) => {
+      state.error = null;
+    },
   },
-  extraReducers:(builder)=>{
+  extraReducers: (builder) => {
     builder
-     .addCase(LoginThunkService.pending,(state)=>{
-                state.loading = true;
-                 state.error = null;
-             })
-             .addCase(LoginThunkService.fulfilled,(state,action)=>{
-                 state.loading = false;
-                 state.user =  action.payload.result;
-                 state.token = action.payload.accessToken;
-             })
-             .addCase(LoginThunkService.rejected,(state,action)=>{
-                 state.loading = false;
-                 state.error = action.payload;
-             })
-              .addCase(CheckUser.pending,(state)=>{
-                state.loading = true;
-                 state.error = null;
-             })
-             .addCase(CheckUser.fulfilled,(state,action)=>{
-                 state.loading = false;
-                 state.user =  action.payload;
-                 state.token = action.payload.accessToken;
-             })
-             .addCase(CheckUser.rejected,(state,action)=>{
-                 state.loading = false;
-                 state.error = action.payload;
-             })
-             .addCase(SignUpThunk.pending,(state)=>{
-                state.loading = true;
-                 state.error = null;
-             })
-             .addCase(SignUpThunk.fulfilled,(state,action)=>{
-                 state.loading = false;
-                 state.user =  action.payload.result;
-                 state.token = action.payload.accessToken;
-             })
-             .addCase(SignUpThunk.rejected,(state,action)=>{
-                 state.loading = false;
-                 state.error = action.payload;
-             })
-             .addCase(UpdateUserDetailsThunk.pending,(state)=>{
-                state.loading = true;
-                 state.error = null;
-             })
-             .addCase(UpdateUserDetailsThunk.fulfilled,(state,action)=>{
-                   state.user.name = action.payload?.name;
-                   state.user.DOB = action.payload?.DOB;
-                   state.user.address = action.payload?.address;
-                   state.user.phoneNo = action.payload?.phoneNo;
-                  state.user.image = action.payload?.image;
-                  state.loading = false;
-             })
-             .addCase(UpdateUserDetailsThunk.rejected,(state,action)=>{
-                 state.loading = false;
-                 state.error = action.payload;
-             })
-              .addCase(UpdateUserPasswordThunk.pending,(state)=>{
-                state.loading = true;
-                 state.error = null;
-             })
-               .addCase(UpdateUserPasswordThunk.fulfilled,(state)=>{
-                state.loading = false;
-             })
-              .addCase(UpdateUserPasswordThunk.rejected,(state,action)=>{
-                 state.loading = false;
-                 state.error = action.payload;
-             })
-  }
-})
+      .addCase(LoginThunkService.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(LoginThunkService.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.result;
+        state.token = action.payload.accessToken;
+      })
+      .addCase(LoginThunkService.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(CheckUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(CheckUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.token = action.payload.accessToken;
+      })
+      .addCase(CheckUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(SignUpThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(SignUpThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.result;
+        state.token = action.payload.accessToken;
+      })
+      .addCase(SignUpThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(UpdateUserDetailsThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(UpdateUserDetailsThunk.fulfilled, (state, action) => {
+        state.user.name = action.payload?.name;
+        state.user.DOB = action.payload?.DOB;
+        state.user.address = action.payload?.address;
+        state.user.phoneNo = action.payload?.phoneNo;
+        state.user.image = action.payload?.image;
+        state.loading = false;
+      })
+      .addCase(UpdateUserDetailsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(UpdateUserPasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(UpdateUserPasswordThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(UpdateUserPasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(OtpemailThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(OtpemailThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(OtpemailThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+       .addCase(OtpemailVerifyThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(OtpemailVerifyThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(OtpemailVerifyThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
 
-export const {adduser,setAccessToken,clearUser,clearError } = UserSlice.actions;
+export const { adduser, setAccessToken, clearUser, clearError } =
+  UserSlice.actions;
 export default UserSlice.reducer;
-

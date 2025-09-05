@@ -35,3 +35,11 @@ export const editProfileService =  async (formData) => {
 export const updatePasswordService =  async({oldPassword,newPassword})=>{
      await axiosInstance.patch("/user/updatePassword",{oldPassword,newPassword});
 }
+export const otpEmailSend =  async(email)=>{   
+  const res =   await axiosInstance.post("/user/send-verification-otp",{email:email});
+     return res.data.success;
+}
+export const otpEmailVerify =  async({otp,email})=>{
+   const res =  await axiosInstance.post("/user/verify-otp",{otp,email});
+       return res.data.success;
+}

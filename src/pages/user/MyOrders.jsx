@@ -7,11 +7,11 @@ import Loader from '../../components/Common/Loader';
 import ErrorMessage from '../../components/Common/ErrorMessage';
 
 const MyOrders = () => {
-const{ order,error,loading} = useSelector((state) => state.order);
+  const { order, error, loading } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   const fetchOrder = async () => {
-   await dispatch(readOrders());
+    await dispatch(readOrders());
   };
 
   useEffect(() => {
@@ -37,18 +37,27 @@ const{ order,error,loading} = useSelector((state) => state.order);
     };
     return colors[status?.toLowerCase()] || 'text-gray-700 bg-gray-100 border-gray-200';
   };
-  if(loading){
-    return <Loader/>
-  }
-  if(error){
-    return <ErrorMessage message={error}/>
+
+  if (loading) {
+    return <Loader />;
   }
 
-  return !order ? (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <EmptyState message="No orders found" />
-    </div>
-  ) : (
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
+
+
+
+  // Fixed condition: Check if order array is empty or doesn't exist
+  if (!order || order.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <EmptyState message="No orders found" />
+      </div>
+    );
+  }
+
+  return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}
@@ -62,9 +71,9 @@ const{ order,error,loading} = useSelector((state) => state.order);
 
         {/* Orders List */}
         <div className="space-y-8">
-          {order.map((order, index) => (
+          {order.map((orderItem, index) => (
             <div
-              key={order._id}
+              key={orderItem._id}
               className="bg-white rounded-3xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-500 hover:border-gray-300"
               style={{
                 animationDelay: `${index * 100}ms`,
@@ -77,7 +86,7 @@ const{ order,error,loading} = useSelector((state) => state.order);
                   <div className="flex-1 min-w-0">
                     <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center space-x-3">
                       <span className="text-emerald-600">#</span>
-                      <span className="truncate">{order._id}</span>
+                      <span className="truncate">{orderItem._id}</span>
                     </h2>
                     <div className="flex flex-wrap items-center gap-6 text-sm">
                       <div className="flex items-center space-x-2">
@@ -85,7 +94,7 @@ const{ order,error,loading} = useSelector((state) => state.order);
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2h3z" />
                         </svg>
                         <span className="text-gray-700">
-                          {new Date(order.createdAt).toLocaleDateString("en-US", {
+                          {new Date(orderItem.createdAt).toLocaleDateString("en-US", {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
@@ -99,7 +108,7 @@ const{ order,error,loading} = useSelector((state) => state.order);
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         <span className="text-gray-700 truncate max-w-xs">
-                          {order.address}
+                          {orderItem.address}
                         </span>
                       </div>
                     </div>
@@ -107,16 +116,16 @@ const{ order,error,loading} = useSelector((state) => state.order);
 
                   {/* Status Badges */}
                   <div className="flex flex-wrap gap-3">
-                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border ${getStatusColor(order.orderStatus)}`}>
+                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border ${getStatusColor(orderItem.orderStatus)}`}>
                       <div className="w-2 h-2 rounded-full bg-current mr-2"></div>
-                      {order.orderStatus?.charAt(0).toUpperCase() + order.orderStatus?.slice(1)}
+                      {orderItem.orderStatus?.charAt(0).toUpperCase() + orderItem.orderStatus?.slice(1)}
                     </div>
                     
-                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border ${getPaymentColor(order.paymentStatus)}`}>
+                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border ${getPaymentColor(orderItem.paymentStatus)}`}>
                       <svg className="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                       </svg>
-                      {order.paymentStatus?.charAt(0).toUpperCase() + order.paymentStatus?.slice(1)} ({order.payMethod})
+                      {orderItem.paymentStatus?.charAt(0).toUpperCase() + orderItem.paymentStatus?.slice(1)} ({orderItem.payMethod})
                     </div>
                   </div>
                 </div>
@@ -134,7 +143,7 @@ const{ order,error,loading} = useSelector((state) => state.order);
                   
                   <div className="text-right">
                     <div className="text-3xl font-bold text-emerald-600">
-                      ${order?.totalPrice?.toFixed(2)}
+                      ${orderItem?.totalPrice?.toFixed(2)}
                     </div>
                     <div className="text-gray-500 text-sm">Total Amount</div>
                   </div>
@@ -142,8 +151,8 @@ const{ order,error,loading} = useSelector((state) => state.order);
 
                 {/* Items */}
                 <div className="space-y-4">
-                  {order.items.length > 0 ? (
-                    order.items.map((item) => (
+                  {orderItem.items && orderItem.items.length > 0 ? (
+                    orderItem.items.map((item) => (
                       <OrderCard key={item._id} item={item} />
                     ))
                   ) : (
@@ -156,13 +165,12 @@ const{ order,error,loading} = useSelector((state) => state.order);
         </div>
       </div>
 
-    <style>{`
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-`}</style>
-
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };

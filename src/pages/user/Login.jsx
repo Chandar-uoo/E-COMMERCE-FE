@@ -20,14 +20,14 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const response = await dispatch(LoginThunkService({ email, password })).unwrap();
-      setTimeout(() => {
+     
         if (response.result.role === "admin") {
           nav("/admin/home");
         } else {
           nav("/");
         }
         setIsSubmitting(false);
-      }, 500);
+     ;
     } catch (err) {
       console.log("Login failed", err);
       setIsSubmitting(false);

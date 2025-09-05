@@ -2,6 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   editProfileService,
   loginService,
+  otpEmailSend,
+  otpEmailVerify,
   signupService,
   updatePasswordService,
   userCheckService,
@@ -9,7 +11,7 @@ import {
 
 export const LoginThunkService = createAsyncThunk(
   "user/login",
-  async ({ email, password }, {  rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
       const res = await loginService(email, password);
       return res;
@@ -20,7 +22,7 @@ export const LoginThunkService = createAsyncThunk(
 );
 export const SignUpThunk = createAsyncThunk(
   "user/signUp",
-  async (formData, {  rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
       const res = await signupService(formData);
       return res;
@@ -29,9 +31,9 @@ export const SignUpThunk = createAsyncThunk(
     }
   }
 );
-export const CheckUser =  createAsyncThunk(
+export const CheckUser = createAsyncThunk(
   "user/check",
-  async (_, {  rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await userCheckService();
       return res;
@@ -42,7 +44,7 @@ export const CheckUser =  createAsyncThunk(
 );
 export const UpdateUserDetailsThunk = createAsyncThunk(
   "user/update",
-  async (formData, {  rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
       const res = await editProfileService(formData);
       return res;
@@ -53,12 +55,30 @@ export const UpdateUserDetailsThunk = createAsyncThunk(
 );
 export const UpdateUserPasswordThunk = createAsyncThunk(
   "user/updatePassword",
-  async ({ oldPassword, newPassword }, {  rejectWithValue }) => {
+  async ({ oldPassword, newPassword }, { rejectWithValue }) => {
     try {
       await updatePasswordService({ oldPassword, newPassword });
     } catch (err) {
-  
-      
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
+export const OtpemailThunk = createAsyncThunk(
+  "user/otpEmail",
+  async ({email}, { rejectWithValue }) => {
+    try {
+    return  await otpEmailSend(email);
+    } catch (err) {
+      return rejectWithValue(err.message || "Something went wrong");
+    }
+  }
+);
+export const OtpemailVerifyThunk = createAsyncThunk(
+  "user/otpEmailVerify",
+  async ({otp,email}, { rejectWithValue }) => {
+    try {   
+     return await otpEmailVerify({otp,email});
+    } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");
     }
   }

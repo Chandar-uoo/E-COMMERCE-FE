@@ -6,20 +6,26 @@ A fully functional frontend for an e-commerce application with authentication, c
 
 ## 🚀 Features
 
--  🔐 User Authentication (Login, Signup, JWT, Refresh Tokens)
-- 🛍️ Product Listing with Cart (Add, Update, Remove)
-- 🗂️ Product Category Filters
-- 💳 Order Placement & Payments
-- 🧑‍💼 Admin Dashboard with:
-- Product Management (CRUD)
-- Order Updation
-- User Management + Search
-- 🔍 Advanced Controls (Filtering / Sorting / Search)
-- 📑 Pagination for Products, Orders, and Users
-- 📦 Role-based Access Control (RBAC)
-- 🔁 Persistent Redux State
-- 🌐 Axios Interceptors + Token Refresh
-- ⚠️ Error + Loading States
+## 🚀 Features  
+
+- 🔐 User Authentication (Login, Signup, JWT, Refresh Tokens)  
+- ✉️ Email System  
+  - OTP Verification on Signup  
+  - Payment Proof / Order Confirmation Emails  
+- 🛍️ Product Listing with Cart (Add, Update, Remove)  
+- 🗂️ Product Category Filters  
+- 💳 Order Placement & Payments  
+- 🧑‍💼 Admin Dashboard with:  
+  - Product Management (CRUD)  
+  - Order Updation  
+  - User Management + Search  
+- 🔍 Advanced Controls (Filtering / Sorting / Search)  
+- 📑 Pagination for Products, Orders, and Users  
+- 📦 Role-based Access Control (RBAC)  
+- 🔁 Persistent Redux State  
+- 🌐 Axios Interceptors + Token Refresh  
+- ⚠️ Error + Loading States  
+
 
 ## 🧪 Tech Stack
 
@@ -71,12 +77,12 @@ npm run dev
 
 ## 📌 Version
 
-Current Version: `v1.1.0` (MVP)
+Current Version: `v1.2.0` (MVP)
 
 - Status: ✅ Stable / Working
 - Last Updated: August 2025
 
-> This is the first stable version of the project with core features implemented (cart, orders, admin panel, auth, etc.).
+> This is the third stable version of the project with core features implemented (cart, orders, admin panel, auth, etc.).
 
 ## 🚧 Planned Features / Future Updates
 

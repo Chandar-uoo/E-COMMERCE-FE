@@ -97,6 +97,7 @@ const UserSlice = createSlice({
       })
       .addCase(UpdateUserPasswordThunk.fulfilled, (state) => {
         state.loading = false;
+        state.error = null;
       })
       .addCase(UpdateUserPasswordThunk.rejected, (state, action) => {
         state.loading = false;
@@ -108,17 +109,19 @@ const UserSlice = createSlice({
       })
       .addCase(OtpemailThunk.fulfilled, (state) => {
         state.loading = false;
+        state.error = null;
       })
       .addCase(OtpemailThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-       .addCase(OtpemailVerifyThunk.pending, (state) => {
+      .addCase(OtpemailVerifyThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(OtpemailVerifyThunk.fulfilled, (state) => {
         state.loading = false;
+        state.error = null;
       })
       .addCase(OtpemailVerifyThunk.rejected, (state, action) => {
         state.loading = false;

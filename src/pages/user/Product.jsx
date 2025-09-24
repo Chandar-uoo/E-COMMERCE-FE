@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from "react";
-import { useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../store/thunk/CartThunk";
 import { orderMaking } from "../../store/thunk/OrderThunk";
@@ -7,62 +7,81 @@ import EmptyState from "../../components/Common/EmptyState";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { Review } from "../../components/user/Review";
 import Loader from "../../components/Common/Loader";
+import { FetchProductById } from "../../store/thunk/ProductThunk";
 
 const Product = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const [quantity, setQuantity] = useState(1);
-  
 
   // Review state
 
-  const { selectedProduct:item ,loading,error,refreshing} = useSelector((state)=> state.products);
+  const {
+    selectedProduct: item,
+    loading,
+    error,
+    refreshing,
+  } = useSelector((state) => state.products);
   const errorResult = useSelector((state) => state.order.error);
   const cartLoading = useSelector((state) => state.cart.loading);
   const orderLoading = useSelector((state) => state.order.loading);
+  const [selectedImage, setSelectedImage] = useState("");
+  const { id } = useParams();
+  // whenever product changes, reset selectedImage to first image
+  useEffect(() => {
+    if (item?.images?.length > 0) {
+      setSelectedImage(item.images[0]);
+    }
+  }, [item]);
 
-const [selectedImage, setSelectedImage] = useState("");
-
-// whenever product changes, reset selectedImage to first image
-useEffect(() => {
-  if (item?.images?.length > 0) {
-    setSelectedImage(item.images[0]);
-  }
-}, [item]);
-
- 
+  useEffect(() => {
+    dispatch(FetchProductById(id));
+  }, []);
 
   const process = async () => {
-    const resultAction = await dispatch(
+    const { razorPay } = await dispatch(
       orderMaking({
         itemsFromClient: [{ productId: item._id, quantity }],
       })
-    );
+    ).unwrap();
 
-    if (orderMaking.fulfilled.match(resultAction)) {
-      nav("/product/payment");
+    if (razorPay) {
+      const options = {
+        key: razorPay.key_id,
+        amount: razorPay.amount,
+        currency: razorPay.currency,
+        name: "Acme Corp",
+        description: "Test Transaction",
+        order_id: razorPay.orderId,
+        handler: function () {
+          alert("✅ Payment Successful!");
+        },
+        prefill: {
+          name: razorPay.prefill.name, // from your frontend state or user object  // from your frontend state or user object
+          contact: razorPay.prefill.phoneNo, // the phone number you want to auto-fill
+        },
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } else {
-      console.error(
-        "Order creation failed:",
-        resultAction.payload || resultAction.error
-      );
+      console.error("Order creation failed:");
       return <ErrorMessage error={errorResult} />;
     }
   };
 
   const handleAddToCart = () => {
-    dispatch(addToCart({productId:item._id || item.id,quantity}));
+    dispatch(addToCart({ productId: item._id || item.id, quantity }));
   };
-
-  
 
   const calculateAverageRating = () => {
     if (item.reviews.length === 0) return item.rating || 4.5;
     const sum = item.reviews.reduce((acc, review) => acc + review.rating, 0);
     return (sum / item.reviews.length).toFixed(1);
   };
-
- 
 
   const incrementQuantity = () => {
     if (quantity < (item.stock || 99)) {
@@ -75,10 +94,9 @@ useEffect(() => {
       setQuantity((prev) => prev - 1);
     }
   };
-if (loading || refreshing || cartLoading || orderLoading) {
-  return <Loader />;
-}
-
+  if (loading || refreshing || cartLoading || orderLoading) {
+    return <Loader />;
+  }
 
   if (!item) {
     return <EmptyState message="Product not found." />;
@@ -202,7 +220,7 @@ if (loading || refreshing || cartLoading || orderLoading) {
                 <div className="border-t border-b border-gray-200 py-6">
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-bold text-green-600">
-                      ${item.price}
+                      ₹{item.price}
                     </span>
                     <span className="text-gray-500">per unit</span>
                   </div>
@@ -242,7 +260,7 @@ if (loading || refreshing || cartLoading || orderLoading) {
                   </div>
 
                   <div className="text-lg font-semibold text-gray-900">
-                    Total: ${(item.price * quantity).toFixed(2)}
+                    Total: ₹{(item.price * quantity).toFixed(2)}
                   </div>
                 </div>
 
@@ -374,7 +392,10 @@ if (loading || refreshing || cartLoading || orderLoading) {
                 </div>
 
                 {/* Reviews Section */}
-                        <Review item ={item} calculateAverageRating = {calculateAverageRating}/>
+                <Review
+                  item={item}
+                  calculateAverageRating={calculateAverageRating}
+                />
               </div>
             </div>
           </div>

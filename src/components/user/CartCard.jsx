@@ -58,7 +58,7 @@ const CartCard = ({ item }) => {
               {item.product.category || "Category"}
             </p>
             <p className="text-lg font-medium text-indigo-600 mt-2">
-              ${item.priceAtTheTime}
+               ₹{item.priceAtTheTime}
             </p>
           </div>
         </div>
@@ -68,7 +68,7 @@ const CartCard = ({ item }) => {
           {/* Delivery Charge */}
           <div className="lg:col-span-2 text-center">
             <span className="text-sm text-gray-500 lg:hidden">Delivery: </span>
-            <span className="font-medium text-gray-900">$15.00</span>
+            <span className="font-medium text-gray-900"> ₹15.00</span>
           </div>
 
           {/* Quantity Controls */}

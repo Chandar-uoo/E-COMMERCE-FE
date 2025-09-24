@@ -104,6 +104,7 @@ const SignUp = () => {
     }
   };
 
+
   const isStep1Valid = formData.name && formData.email && formData.password && isEmailVerified;
   const isStep2Valid = formData.phoneNo && formData.address && formData.DOB && formData.gender;
 
@@ -191,6 +192,7 @@ const SignUp = () => {
                     <input
                       type="text"
                       name="name"
+                      minLength={3}
                       className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300"
                       placeholder="Enter your full name"
                       value={formData.name}
@@ -212,6 +214,7 @@ const SignUp = () => {
                     <input
                       type="email"
                       name="email"
+                      min={10}
                       className={`w-full pl-12 pr-4 py-3 bg-white border rounded-xl text-gray-800 placeholder-gray-400 focus:ring-2 focus:outline-none transition-all duration-300 ${
                         isEmailVerified 
                           ? "border-green-300 focus:border-green-500 focus:ring-green-500/20" 
@@ -384,6 +387,7 @@ const SignUp = () => {
                     </div>
                     <input
                       type="text"
+                      maxLength={500}
                       name="address"
                       className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300"
                       placeholder="Your address"

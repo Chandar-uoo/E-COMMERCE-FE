@@ -57,7 +57,7 @@ const OrderCard = ({ item }) => {
                 Qty: {item.quantity}
               </span>
               <span className="text-2xl font-bold text-emerald-600">
-                ${(item.productId?.price * item.quantity).toFixed(2)}
+                 ₹{(item.productId?.price * item.quantity).toFixed(2)}
               </span>
             </div>
           </div>
@@ -67,7 +67,7 @@ const OrderCard = ({ item }) => {
           </p>
           
           <div className="text-xs text-gray-500">
-            Unit Price: ${item.productId?.price?.toFixed(2)}
+            Unit Price:  ₹{item.productId?.price?.toFixed(2)}
           </div>
         </div>
 

@@ -46,7 +46,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         return Promise.reject({
-          message: "Session expired. Please login again.",
+          message: "Please login again.",
           status: 401,
           raw: refreshError,
         });
@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
     // 2. 🌐 Handle Network or CORS errors
     if (!error.response) {
       return Promise.reject({
-        message: "Network Error. Please check your connection or CORS policy.",
+        message: "Network Error. Please check your connection .",
         status: 500,
         raw: error,
       });

@@ -21,8 +21,8 @@ export const orderMaking = createAsyncThunk(
   "order/making",
   async ({ itemsFromClient }, { rejectWithValue }) => {
     try {
-      const  currentOrder = await orderMakeService(itemsFromClient);
-      return currentOrder;
+      const  {order,razorPay} = await orderMakeService(itemsFromClient);     
+      return {order,razorPay} ;
     } catch (err) {
       return rejectWithValue(err.message || "Something went wrong");
     }

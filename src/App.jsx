@@ -20,7 +20,7 @@ import UserLayout from "./layout/UserLayout";
 import ViewProduct from "./components/admin/VeiwProduct";
 import ViewOrder from "./components/admin/VeiwOrder";
 import ViewCustomer from "./components/admin/VeiwCustomer";
-import { Profile } from "./components/user/Profile";
+import { Profile } from "./pages/user/Profile";
 import ProductFormWrapper from "./components/admin/ProductFormWrapper";
 import { CheckUser } from "./store/thunk/UserThunk";
 import { useDispatch } from "react-redux";
@@ -36,6 +36,7 @@ const App = () => {
      };
     if(!user){
       fetchuser();
+      
     }
  
      // eslint-disable-next-line react-hooks/exhaustive-deps

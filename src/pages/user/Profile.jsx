@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Loader from "../Common/Loader";
+ import React, { useEffect, useState } from "react";
+import Loader from "../../components/Common/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CheckUser,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import userImage from "../../assets/default-img.jpg";
 import { clearError } from "../../store/Slices/UserSlice";
-import OtpForm from "./OtpForm";
+import { DateUtils, validateForm, validatePassword } from "../../utils/helpers";
 
 export const Profile = () => {
   const { user, loading, error } = useSelector((state) => state.user);
@@ -34,7 +34,6 @@ export const Profile = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showOtpForm, setshowOtpForm] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",
     DOB: user?.DOB?.slice(0, 10) || "",
@@ -69,40 +68,10 @@ export const Profile = () => {
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
 
-    if (!formData.name?.trim()) newErrors.name = "Name is required";
-    if (!formData.phoneNo?.trim())
-      newErrors.phoneNo = "Phone number is required";
-    else if (!/^\d{10}$/.test(formData.phoneNo.replace(/\D/g, ""))) {
-      newErrors.phoneNo = "Please enter a valid 10-digit phone number";
-    }
-    if (!formData.address?.trim()) newErrors.address = "Address is required";
-    if (!formData.DOB) newErrors.DOB = "Date of birth is required";
-    if (!formData.image) newErrors.DOB = "image url is required";
-    return newErrors;
-  };
-
-  const validatePassword = () => {
-    const newErrors = {};
-
-    if (!passwords.oldPassword)
-      newErrors.oldPassword = "Current password is required";
-    if (!passwords.newPassword)
-      newErrors.newPassword = "New password is required";
-    else if (passwords.newPassword.length < 6) {
-      newErrors.newPassword = "Password must be at least 6 characters";
-    }
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    return newErrors;
-  };
 
   const submitProfileUpdate = async () => {
-    const formErrors = validateForm();
+    const formErrors = validateForm(formData);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
@@ -120,7 +89,7 @@ export const Profile = () => {
   };
 
   const submitPasswordUpdate = async () => {
-    const passwordErrors = validatePassword();
+    const passwordErrors = validatePassword(passwords);
     if (Object.keys(passwordErrors).length > 0) {
       setErrors(passwordErrors);
       return;
@@ -138,33 +107,8 @@ export const Profile = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
-  const getAge = (dateString) => {
-    const today = new Date();
-    const birthDate = new Date(dateString);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
-    return age;
-  };
-  const sendEmailOtp = async () => {
-    const action = await dispatch(OtpemailThunk());
-    if (OtpemailThunk.fulfilled.match(action)) {
-      setshowOtpForm(true);
-    }
-  };
+
   useEffect(() => {
     dispatch(CheckUser());
   }, [dispatch]);
@@ -185,14 +129,7 @@ export const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
-      {showOtpForm ? (
-        <div className="flex  justify-center mt-7 ">
-          <OtpForm
-            sendEmailOtp={sendEmailOtp}
-            setshowOtpForm={setshowOtpForm}
-          />
-        </div>
-      ) : (
+     
         <div className="max-w-4xl mx-auto">
           {/* Success Message */}
           {successMessage && (
@@ -225,7 +162,7 @@ export const Profile = () => {
                   </h1>
                   <div className="flex items-center justify-center sm:justify-start mt-2 text-sm gap-1.5 text-gray-500">
                     <Calendar />
-                    Age {getAge(user?.DOB)}
+                    Age {DateUtils.format(user?.DOB)}
                     <MailQuestion />{" "}
                     <p
                       className={`${
@@ -234,14 +171,7 @@ export const Profile = () => {
                     >
                       {user?.isVerified ? "Verified" : "Verfication Pending"}
                     </p>
-                    {!user?.isVerified && (
-                      <button
-                        onClick={sendEmailOtp}
-                        className="bg-blue-500 w-12  hover:bg-white hover:text-blue-800 text-white rounded"
-                      >
-                        Verify
-                      </button>
-                    )}
+                    
                   </div>
                 </div>
               </div>
@@ -288,7 +218,7 @@ export const Profile = () => {
                     <div>
                       <p className="text-sm text-gray-500">Date of Birth</p>
                       <p className="font-medium text-gray-900">
-                        {formatDate(user?.DOB)}
+                        {DateUtils.getAge(user?.DOB)}
                       </p>
                     </div>
                   </div>
@@ -326,6 +256,7 @@ export const Profile = () => {
                     <input
                       type="text"
                       name="name"
+                      minLength={3}
                       value={formData.name || ""}
                       onChange={handleInputChange}
                       className={`w-full p-3 border rounded-lg focus:ring-2  text-black focus:ring-blue-500 focus:border-blue-500 ${
@@ -575,7 +506,7 @@ export const Profile = () => {
             </div>
           </div>
         </div>
-      )}
+      
     </div>
   );
 };

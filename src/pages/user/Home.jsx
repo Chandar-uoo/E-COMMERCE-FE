@@ -19,7 +19,8 @@ const { products, loading: productsLoading, error: productsError } = useSelector
   
   // checking user is login or make request
 
-  if(userError === "Session expired. Please login again."){
+
+  if(userError == "Please login again."){
     nav("/login")
   }
 

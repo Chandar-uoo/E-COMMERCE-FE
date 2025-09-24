@@ -15,6 +15,7 @@ const OrderSlice = createSlice({
       state.order = [];
       state.currentOrder = null;
       state.error = null;
+
     },
   },
   extraReducers: (builder) => {
@@ -39,7 +40,8 @@ const OrderSlice = createSlice({
       })
       .addCase(orderMaking.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentOrder = action.payload;
+        state.currentOrder = action.payload.order;      
+
       })
       .addCase(orderMaking.rejected, (state, action) => {
         state.loading = false;

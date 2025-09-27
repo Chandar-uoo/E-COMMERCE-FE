@@ -1,44 +1,37 @@
-import React, { useEffect } from 'react';
-import NavBar from '../../components/user/NavBar';
-import Footer from '../../components/user/Footer';
-import Banner from '../../components/user/Banner';
-import ProductList from '../../components/user/ProductList';
-import { Add } from '../../store/Slices/ProductSlice'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import Banner from "../../components/user/Banner";
+import ProductList from "../../components/user/ProductList";
+import {  useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Common/Loader";
-import ErrorMessage from '../../components/Common/ErrorMessage';
-import { FetchProducts } from '../../store/thunk/ProductThunk';
+import ErrorMessage from "../../components/Common/ErrorMessage";
+import { useGetAllProductsQuery } from "../../services/user/productApi";
 
 const Home = () => {
-  const dispatch = useDispatch();
   const nav = useNavigate();
-   const { error: userError, loading: userLoading } = useSelector((state) => state.user);
-const { products, loading: productsLoading, error: productsError } = useSelector((state) => state.products);
+  const { error: userError, loading: userLoading } = useSelector(
+    (state) => state.user
+  );
+  const { data: products, isLoading, error } = useGetAllProductsQuery();
 
-  
+
+
   // checking user is login or make request
 
-
-  if(userError == "Please login again."){
-    nav("/login")
+  if (userError == "Please login again.") {
+    nav("/login");
   }
 
+  if (userLoading || isLoading) return <Loader />;
 
-  // product fetching 
- useEffect(() => {
-  if (!products || products.length === 0) {
-    dispatch(FetchProducts());
+  if (error) {
+    console.log(error);
+    return <ErrorMessage message={error.this.state.first} />;
   }
-}, [dispatch, products]);
+console.log(products);
 
-
-  if (userLoading|| productsLoading) return <Loader />;
-  if (productsError) return <ErrorMessage message={productsError} />
-  
   return (
     <>
-      <Banner/>
+      <Banner />
       <ProductList products={products} />
     </>
   );

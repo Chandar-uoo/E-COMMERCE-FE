@@ -1,33 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../store/thunk/CartThunk";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { FetchProductById } from "../../store/thunk/ProductThunk";
 import { useState } from "react";
+import ErrorMessage from "../Common/ErrorMessage";
 
 const ProductCard = ({ product }) => {
   const nav = useNavigate();
   const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.cart);
   const [loading, setloading] = useState(false);
   const veiwProduct = async (id) => {
-    const result = dispatch(FetchProductById(id));
-    if (!result.error) {
       nav(`/products/${id}`);
-    }
   };
   const addItemToCart = async () => {
-  setloading(true);
-
-  try {
-    const result = await dispatch(addToCart({ productId: product._id, quantity: 1 })).unwrap();
-    console.log("✅ Fulfilled:", result);
-  } catch (err) {
-    console.error("❌ Rejected:", err);
-  } finally {
-    setloading(false);
-  }
-};
-
+    setloading(true);
+    try {
+      await dispatch(
+        addToCart({ productId: product._id, quantity: 1 })
+      ).unwrap();
+    } catch (err) {
+      console.error("❌ Rejected:", err);
+    } finally {
+      setloading(false);
+    }
+  };
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden p-4 hover:shadow-xl transition duration-300 w-full sm:w-60">

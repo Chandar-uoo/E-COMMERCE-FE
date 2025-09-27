@@ -5,11 +5,9 @@ import {
   Filter,
   Search,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { SearchProduct } from "../../store/thunk/ProductThunk";
 
 const ProductFilter = ({ isOpen, onClose }) => {
-  const dispatch = useDispatch();
+  
    const [searchParams,setSearchParams] = useSearchParams();
 
   // State for filter options
@@ -42,7 +40,6 @@ const ProductFilter = ({ isOpen, onClose }) => {
       return acc;
     }, {});
       filterObj.page = 1;
-    dispatch(SearchProduct(filterObj));
      const queryString = new URLSearchParams(filterObj).toString();
         setSearchParams(queryString)
     onClose(); // Close the filter panel after applying

@@ -7,26 +7,22 @@ import EmptyState from "../../components/Common/EmptyState";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { Review } from "../../components/user/Review";
 import Loader from "../../components/Common/Loader";
-import { FetchProductById } from "../../store/thunk/ProductThunk";
-
+import { rzpay } from "../../utils/payment";
+import { toast } from "react-toastify";
+import { useGetProductQuery } from "../../services/user/productApi";
 const Product = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const { id } = useParams();
 
+const { data:item, isLoading, isError, error } = useGetProductQuery(id);
   // Review state
-
-  const {
-    selectedProduct: item,
-    loading,
-    error,
-    refreshing,
-  } = useSelector((state) => state.products);
   const errorResult = useSelector((state) => state.order.error);
   const cartLoading = useSelector((state) => state.cart.loading);
   const orderLoading = useSelector((state) => state.order.loading);
   const [selectedImage, setSelectedImage] = useState("");
-  const { id } = useParams();
+
   // whenever product changes, reset selectedImage to first image
   useEffect(() => {
     if (item?.images?.length > 0) {
@@ -34,47 +30,28 @@ const Product = () => {
     }
   }, [item]);
 
-  useEffect(() => {
-    dispatch(FetchProductById(id));
-  }, []);
+
 
   const process = async () => {
-    const { razorPay } = await dispatch(
-      orderMaking({
-        itemsFromClient: [{ productId: item._id, quantity }],
-      })
-    ).unwrap();
+    const { razorPay } = await dispatch(orderMaking({itemsFromClient: [{ productId: item._id, quantity }]})).unwrap();
 
-    if (razorPay) {
-      const options = {
-        key: razorPay.key_id,
-        amount: razorPay.amount,
-        currency: razorPay.currency,
-        name: "Acme Corp",
-        description: "Test Transaction",
-        order_id: razorPay.orderId,
-        handler: function () {
-          alert("✅ Payment Successful!");
-        },
-        prefill: {
-          name: razorPay.prefill.name, // from your frontend state or user object  // from your frontend state or user object
-          contact: razorPay.prefill.phoneNo, // the phone number you want to auto-fill
-        },
-        theme: {
-          color: "#F37254",
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } else {
-      console.error("Order creation failed:");
-      return <ErrorMessage error={errorResult} />;
+         // function to do payment task
+    try {
+      await rzpay(razorPay);
+    } catch (err) {
+      return  toast.error("payment has been failed");
     }
   };
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ productId: item._id || item.id, quantity }));
+  try {
+     dispatch(addToCart({ productId:"55454d545dd55dw" || item.id, quantity }));
+     toast.success("Item added to cart")
+  } catch (err) {
+    console.log(err);
+    
+  }
+  
   };
 
   const calculateAverageRating = () => {
@@ -94,7 +71,7 @@ const Product = () => {
       setQuantity((prev) => prev - 1);
     }
   };
-  if (loading || refreshing || cartLoading || orderLoading) {
+  if (isLoading || orderLoading) {
     return <Loader />;
   }
 
@@ -102,7 +79,7 @@ const Product = () => {
     return <EmptyState message="Product not found." />;
   }
 
-  if (errorResult || error) {
+  if (errorResult || error|| isError) {
     return <ErrorMessage error={errorResult} />;
   }
 

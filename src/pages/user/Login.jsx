@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { LoginThunkService } from "../../store/thunk/UserThunk";
-import ErrorMessage from "../../components/Common/ErrorMessage";
-import { Loader, Eye, EyeOff, Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
-import { clearError } from "../../store/Slices/UserSlice";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
+import { useLoginMutation } from "../../services/auth/authApi";
+import { tokenService } from "../../utils/tokenService";
+import { toast } from "react-toastify";
+import Loader from "../../components/Common/Loader";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const dispatch = useDispatch();
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const nav = useNavigate();
-  const { error, loading } = useSelector((state) => state.user);
-
   const emailRef = useRef();
   const passwordRef = useRef();
 
@@ -21,14 +18,15 @@ const Login = () => {
     if (!formdata.email || !formdata.password) return;
     setIsSubmitting(true);
     try {
-      const response = await dispatch(LoginThunkService(formdata)).unwrap();
-      if (response.result.role === "admin") {
+      const res = await login(formdata).unwrap();
+      tokenService.set(res.accessToken);
+      if (res.result.role === "admin") {
         nav("/admin/home");
       } else {
         nav("/");
       }
     } catch (err) {
-      console.log("Login failed", err);
+      toast.warn(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -42,29 +40,10 @@ const Login = () => {
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
-    console.log("Form Data:", formdata);
     loginuser(formdata);
   };
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        dispatch(clearError());
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [error, dispatch]);
-
-  if (loading && !isSubmitting) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <Loader className="w-8 h-8 animate-spin text-blue-500" />
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  if (isLoginLoading) return <Loader />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -74,7 +53,9 @@ const Login = () => {
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome Back
+            </h1>
             <p className="text-gray-600">Sign in to your account</p>
           </div>
 
@@ -122,12 +103,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
-            {error && (
-              <div className="bg-red-50 border border-red-300 rounded-xl p-4">
-                <ErrorMessage message={error} />
-              </div>
-            )}
 
             <button
               type="submit"

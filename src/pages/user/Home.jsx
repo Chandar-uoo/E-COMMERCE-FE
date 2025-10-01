@@ -1,38 +1,54 @@
-import Banner from "../../components/user/Banner";
-import ProductList from "../../components/user/ProductList";
-import {  useSelector } from "react-redux";
+import Banner from "../../components/user/HomeComponents/Banner";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Common/Loader";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { useGetAllProductsQuery } from "../../services/user/productApi";
+import { useCheckUserQuery } from "../../services/user/userApi";
+import { useEffect } from "react";
+import ProductCard from "../../components/user/HomeComponents/ProductCard";
 
 const Home = () => {
   const nav = useNavigate();
-  const { error: userError, loading: userLoading } = useSelector(
-    (state) => state.user
-  );
-  const { data: products, isLoading, error } = useGetAllProductsQuery();
 
+  const {
+    error: userError,
+    isLoading: userLoading,
+    isError: isUserError,
+  } = useCheckUserQuery();
 
+  const {
+    data: products,
+    isLoading,
+    isError,
+    error,
+  } = useGetAllProductsQuery();
 
-  // checking user is login or make request
+  // --- Handle auth errors (401) ---
+  useEffect(() => {
+    if (isUserError && userError?.status === 401) {
+      if (userError?.message === "Please login again.") {
+        nav("/login");
+      }
+    }
+  }, [isUserError, userError, nav]);
 
-  if (userError == "Please login again.") {
-    nav("/login");
-  }
-
+  // --- Loading state ---
   if (userLoading || isLoading) return <Loader />;
 
-  if (error) {
-    console.log(error);
-    return <ErrorMessage message={error.this.state.first} />;
-  }
-console.log(products);
+  // --- Error state ---
+  if (isError)
+    return <ErrorMessage message={error?.message || "Something went wrong"} />;
 
   return (
     <>
       <Banner />
-      <ProductList products={products} />
+      <section className="bg-gray-100 py-10 px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {products?.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      </section>
     </>
   );
 };

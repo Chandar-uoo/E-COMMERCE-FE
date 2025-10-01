@@ -1,22 +1,12 @@
-import React, { useEffect } from 'react';
-import OrderCard from '../../components/user/OrderCard';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import OrderCard from '../../components/user/OrderComponents/OrderCard';
 import EmptyState from '../../components/Common/EmptyState';
-import { readOrders } from '../../store/thunk/OrderThunk';
 import Loader from '../../components/Common/Loader';
-import ErrorMessage from '../../components/Common/ErrorMessage';
+import { useReadOrderQuery } from '../../services/user/orderApi';
+import { toast } from 'react-toastify';
 
 const MyOrders = () => {
-  const { order, error, loading } = useSelector((state) => state.order);
-  const dispatch = useDispatch();
-
-  const fetchOrder = async () => {
-    await dispatch(readOrders());
-  };
-
-  useEffect(() => {
-    fetchOrder();
-  }, []);
+const { data: orders, isLoading, isError, error:isReadOrderError} = useReadOrderQuery();
 
   const getStatusColor = (status) => {
     const colors = {
@@ -38,18 +28,19 @@ const MyOrders = () => {
     return colors[status?.toLowerCase()] || 'text-gray-700 bg-gray-100 border-gray-200';
   };
 
-  if (loading) {
-    return <Loader />;
+ 
+ if (isLoading) {
+    return <Loader />
+  };
+  if(isError){
+    toast.error(isReadOrderError.message)
   }
-
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
+  
 
 
 
   // Fixed condition: Check if order array is empty or doesn't exist
-  if (!order || order.length === 0) {
+  if (!orders || orders.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <EmptyState message="No orders found" />
@@ -71,7 +62,7 @@ const MyOrders = () => {
 
         {/* Orders List */}
         <div className="space-y-8">
-          {order.map((orderItem, index) => (
+          {orders.map((orderItem, index) => (
             <div
               key={orderItem._id}
               className="bg-white rounded-3xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-500 hover:border-gray-300"
@@ -143,7 +134,7 @@ const MyOrders = () => {
                   
                   <div className="text-right">
                     <div className="text-3xl font-bold text-emerald-600">
-                      ${orderItem?.totalPrice?.toFixed(2)}
+                      ₹{orderItem?.totalPrice?.toFixed(2)}
                     </div>
                     <div className="text-gray-500 text-sm">Total Amount</div>
                   </div>

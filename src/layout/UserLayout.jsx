@@ -1,9 +1,9 @@
 
 
 import React from 'react'
-import NavBar from '../components/user/NavBar'
+import NavBar from '../components/user/UserLayoutComponents/NavBar'
 import { Outlet } from 'react-router-dom'
-import Footer from '../components/user/Footer'
+import Footer from '../components/user/UserLayoutComponents/Footer'
 
 
 const UserLayout = () => {

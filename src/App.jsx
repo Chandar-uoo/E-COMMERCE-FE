@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/user/Home";
 import Product from "./pages/user/Product";
@@ -22,26 +22,12 @@ import ViewOrder from "./components/admin/VeiwOrder";
 import ViewCustomer from "./components/admin/VeiwCustomer";
 import { Profile } from "./pages/user/Profile";
 import ProductFormWrapper from "./components/admin/ProductFormWrapper";
-import { CheckUser } from "./store/thunk/UserThunk";
-import { useDispatch } from "react-redux";
-import { AppStore } from "./store/AppStore";
-
+import { ToastContainer, Bounce } from "react-toastify";
+import { useCheckUserQuery } from "./services/user/userApi";
 
 const App = () => {
-  const user =  AppStore.getState().user.user;
- const dispatch =  useDispatch();
-    useEffect(() => {
-     const fetchuser = async () => {
-       await dispatch(CheckUser());
-     };
-    if(!user){
-      fetchuser();
-      
-    }
- 
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
- 
+ const { data } = useCheckUserQuery();
+
   return (
     <div>
       <BrowserRouter>
@@ -74,6 +60,20 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        limit={4}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

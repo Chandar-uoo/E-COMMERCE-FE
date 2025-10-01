@@ -1,7 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./Slices/UserSlice";
-import orderReducer from "./Slices/OrderSlice";
-import cartReducer from "./Slices/CartSlice";
 import adminUserReducer from "./AdminSlice/AdminUserSlice";
 import adminOrderReducer from "./AdminSlice/AdminOrderSlice";
 import adminProductReducer from "./AdminSlice/AdminProductSlice";
@@ -14,14 +11,11 @@ import { orderApi } from "../services/user/orderApi";
 export const AppStore = configureStore({
   reducer: {
     /*user*/
-    user: userReducer,
     [productApi.reducerPath]: productApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
     [orderApi.reducerPath]:orderApi.reducer,
-    cart: cartReducer,
-    order: orderReducer,
     /*admin*/
     adminUserState: adminUserReducer,
     adminOrderState: adminOrderReducer,

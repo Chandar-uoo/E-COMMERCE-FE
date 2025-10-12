@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
 import { useLoginMutation } from "../../services/auth/authApi";
 import { tokenService } from "../../utils/tokenService";
 import { toast } from "react-toastify";
 import Loader from "../../components/Common/Loader";
-
+import { useDispatch } from "react-redux";
+import { userApi } from "../../services/user/userApi";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const nav = useNavigate();
   const emailRef = useRef();
@@ -20,7 +22,9 @@ const Login = () => {
     try {
       const res = await login(formdata).unwrap();
       tokenService.set(res.accessToken);
-      if (res.result.role === "admin") {
+      dispatch(userApi.util.resetApiState());
+      const role = res.result?.role || res.role;
+      if (role === "admin") {
         nav("/admin/home");
       } else {
         nav("/");

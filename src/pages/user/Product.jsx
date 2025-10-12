@@ -5,7 +5,7 @@ import { Review } from "../../components/user/ProductComponents/Review";
 import Loader from "../../components/Common/Loader";
 import { toast } from "react-toastify";
 import { useGetProductQuery } from "../../services/user/productApi";
-import { ProductImage } from "../../components/user/ProductComponents/ProducTimage";
+import { ProductImage } from "../../components/user/ProductComponents/ProductImage";
 import { ProductDetails } from "../../components/user/ProductComponents/ProductDetails";
 import { ProductSpecifcation } from "../../components/user/ProductComponents/ProductSpecifcation";
 import useProductHook from "../../hooks/ProductHooks/useProductHook";

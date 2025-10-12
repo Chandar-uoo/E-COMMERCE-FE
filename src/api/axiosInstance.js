@@ -22,11 +22,12 @@ export const axiosBaseQuery =
       return { data: res.data };
     } catch (err) {
       console.log(err);
-      
+
       return {
         error: {
-          status: err.status,
-          message: err.message, // keep only safe parts
+          status: err.status || err.response?.status || 500, // ✅ Gets actual status
+          message: err.message || "An error occurred", // ✅ Gets actual message
+          data: err.response?.data,
         },
       };
     }

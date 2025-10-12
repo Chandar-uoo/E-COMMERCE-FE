@@ -7,14 +7,14 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: "/user" }),
   endpoints: (builder) => ({
     checkUser: builder.query({
-      query: () => ({ url: "/userCheck", method: "GET" }),
+      query: () => ({ url: "/user-check", method: "GET" }),
       transformResponse: (res) => res.result,
       providesTags:["user"]
     }),
 
     editUser: builder.mutation({
       query: (formData) => ({
-        url: "/updateUser",
+        url: "/update-user",
         method: "PATCH",
         body: formData,
       }),
@@ -24,7 +24,7 @@ export const userApi = createApi({
 
     passwordUpdate: builder.mutation({
       query: (userUpdates) => ({
-        url: "/updatePassword",
+        url: "/update-password",
         method: "PATCH",
         body: userUpdates,
       }),

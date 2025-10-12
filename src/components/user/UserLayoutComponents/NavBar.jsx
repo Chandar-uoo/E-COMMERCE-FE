@@ -4,14 +4,14 @@ import { FaTruck } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearOrder } from "../../../store/Slices/OrderSlice";
-import { clearCartState } from "../../../store/Slices/CartSlice";
-import userImage from "../../assets/default-img.jpg";
+import userImage from "../../../assets/default-img.jpg";
 import { useLogoutMutation } from "../../../services/auth/authApi";
 import Loader from "../../Common/Loader";
 import { useCheckUserQuery, userApi } from "../../../services/user/userApi";
 import { tokenService } from "../../../utils/tokenService";
 import { CustomToast } from "../../../utils/CustomToast";
+import { cartApi } from "../../../services/user/cartApi";
+import { orderApi } from "../../../services/user/orderApi";
 
 const NavBar = () => {
   const { data:user } = useCheckUserQuery(undefined, {
@@ -40,12 +40,12 @@ const NavBar = () => {
   const handleLogout = async () => {
     await logout();
     localStorage.clear();
-    tokenService.set(null);
+    tokenService.clear();
     dispatch(userApi.util.resetApiState());
-    dispatch(clearCartState());
-    dispatch(clearOrder());
+    dispatch(cartApi.util.resetApiState());
+    dispatch(orderApi.util.resetApiState());
+    console.log(tokenService.get());
     setshowCustomToast(true);
-    
   };
 
   if (isLogoutLoading) return <Loader />;

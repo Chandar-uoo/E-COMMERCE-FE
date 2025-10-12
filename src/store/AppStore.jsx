@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import adminUserReducer from "./AdminSlice/AdminUserSlice";
-import adminOrderReducer from "./AdminSlice/AdminOrderSlice";
-import adminProductReducer from "./AdminSlice/AdminProductSlice";
 import { productApi } from "../services/user/productApi";
 import { userApi } from "../services/user/userApi";
 import { authApi } from "../services/auth/authApi";
 import { cartApi } from "../services/user/cartApi";
 import { orderApi } from "../services/user/orderApi";
+import { adminCustomerApi } from "../services/admin/adminCustomerApi";
+import { adminOrderApi } from "../services/admin/adminOrdersApi";
+import { adminProductApi } from "../services/admin/adminProductApi";
+import { adminDashBoardApi } from "../services/admin/adminDashBoard";
 
 export const AppStore = configureStore({
   reducer: {
@@ -17,9 +18,10 @@ export const AppStore = configureStore({
     [cartApi.reducerPath]: cartApi.reducer,
     [orderApi.reducerPath]:orderApi.reducer,
     /*admin*/
-    adminUserState: adminUserReducer,
-    adminOrderState: adminOrderReducer,
-    adminProductState: adminProductReducer,
+    [adminCustomerApi.reducerPath]:adminCustomerApi.reducer,
+    [adminOrderApi.reducerPath]:adminOrderApi.reducer,
+    [adminProductApi.reducerPath]:adminProductApi.reducer,
+    [adminDashBoardApi.reducerPath]:adminDashBoardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -27,5 +29,9 @@ export const AppStore = configureStore({
       .concat(userApi.middleware)
       .concat(authApi.middleware)
       .concat(cartApi.middleware)
-      .concat(orderApi.middleware),
+      .concat(orderApi.middleware)
+      .concat(adminOrderApi.middleware)
+      .concat(adminProductApi.middleware)
+      .concat(adminCustomerApi.middleware)
+      .concat(adminDashBoardApi.middleware),
 });

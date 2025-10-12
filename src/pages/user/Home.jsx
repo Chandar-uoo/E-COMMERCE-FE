@@ -1,13 +1,14 @@
 import Banner from "../../components/user/HomeComponents/Banner";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Common/Loader";
-import ErrorMessage from "../../components/Common/ErrorMessage";
 import { useGetAllProductsQuery } from "../../services/user/productApi";
 import { useCheckUserQuery } from "../../services/user/userApi";
 import { useEffect } from "react";
 import ProductCard from "../../components/user/HomeComponents/ProductCard";
+import { toast } from "react-toastify";
 
 const Home = () => {
+
   const nav = useNavigate();
 
   const {
@@ -37,7 +38,7 @@ const Home = () => {
 
   // --- Error state ---
   if (isError)
-    return <ErrorMessage message={error?.message || "Something went wrong"} />;
+   toast.error(error?.message || "Something went wrong");
 
   return (
     <>
@@ -52,5 +53,4 @@ const Home = () => {
     </>
   );
 };
-
 export default Home;

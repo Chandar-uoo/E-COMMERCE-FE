@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmptyState from "../../components/Common/EmptyState";
-import { Review } from "../../components/user/Product Components/Review";
+import { Review } from "../../components/user/ProductComponents/Review";
 import Loader from "../../components/Common/Loader";
 import { toast } from "react-toastify";
 import { useGetProductQuery } from "../../services/user/productApi";
-import { ProductImage } from "../../components/user/Product Components/ProducTimage";
-import { ProductDetails } from "../../components/user/Product Components/ProductDetails";
-import { ProductSpecifcation } from "../../components/user/Product Components/ProductSpecifcation";
+import { ProductImage } from "../../components/user/ProductComponents/ProducTimage";
+import { ProductDetails } from "../../components/user/ProductComponents/ProductDetails";
+import { ProductSpecifcation } from "../../components/user/ProductComponents/ProductSpecifcation";
 import useProductHook from "../../hooks/ProductHooks/useProductHook";
 import usePaymentHooks from "../../hooks/paymentHook/usePaymentHook";
 const Product = () => {

@@ -1,11 +1,12 @@
 import React from 'react'
 
 export const ReveiwsDisplay = ({reviews}) => {
+  
   return (
     <>
     <div className="space-y-4">
           {reviews.length > 0 ? (
-            reviews.map((review) => (
+            reviews?.map((review) => (
               <div
                 key={review._id}
                 className="bg-white p-6 rounded-xl border border-gray-200"
@@ -14,7 +15,7 @@ export const ReveiwsDisplay = ({reviews}) => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-semibold text-gray-800">
-                        {review.user.name}
+                        {review.user?.name}
                       </h4>
                       {review.verified && (
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
@@ -38,7 +39,7 @@ export const ReveiwsDisplay = ({reviews}) => {
                         ))}
                       </div>
                       <span className="text-sm text-gray-500">
-                        {review.createdAt.split("T")[0]}
+                         {review.createdAt?.split("T")[0] ?? "N/A"}
                       </span>
                     </div>
                   </div>

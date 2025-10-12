@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useCheckUserQuery } from "../../services/user/userApi";
-import { postReviewService } from "../../api/reviewService";
+import { usePostReviewMutation } from "../../services/user/productApi";
 
 function useReveiwHooks({item}) {
   
     const {data:user} = useCheckUserQuery();
-     const [reviews, setReviews] = useState(item.reviews ?? []);
+     const [reviews,_] = useState(item.reviews ?? []);
   const [newReview, setNewReview] = useState({
     rating: 5,
     comment: "",
   });
+  const[addReveiw] =   usePostReviewMutation()
   const [writeReview, setwriteReview] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [loading, setloading] = useState(false);
@@ -23,12 +24,11 @@ function useReveiwHooks({item}) {
   const handleAddReview = async () => {
     if (newReview.comment.trim()) {
       setloading(true);
-      const review = await postReviewService({
+    await addReveiw({
         id: item._id,
         rating: newReview.rating,
         comment: newReview.comment,
       });
-      setReviews((prev) => [review.data, ...prev]);
       setwriteReview(true);
       setNewReview({ rating: 5, comment: "" });
       setShowReviewForm(false);

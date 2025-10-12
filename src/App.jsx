@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/user/Home";
 import Product from "./pages/user/Product";
 import MyOrders from "./pages/user/MyOrders";
 import Cart from "./pages/user/Cart";
-import Transaction from "./pages/user/Transaction";
 import Login from "./pages/user/Login";
 import SignUp from "./pages/user/SignUp";
 import Search from "./pages/user/Search";
@@ -17,11 +15,11 @@ import Products from "./pages/admin/Product";
 import Order from "./pages/admin/Order";
 import Customers from "./pages/admin/Customers";
 import UserLayout from "./layout/UserLayout";
-import ViewProduct from "./components/admin/VeiwProduct";
-import ViewOrder from "./components/admin/VeiwOrder";
-import ViewCustomer from "./components/admin/VeiwCustomer";
+import ViewProduct from "./components/admin/ProductComponents/VeiwProduct";
+import ViewOrder from "./components/admin/OrderComonents/VeiwOrder";
+import ViewCustomer from "./components/admin/CustomerComponents/VeiwCustomer";
 import { Profile } from "./pages/user/Profile";
-import ProductFormWrapper from "./components/admin/ProductFormWrapper";
+import ProductFormWrapper from "./components/admin/ProductComponents/ProductFormWrapper";
 import { ToastContainer, Bounce } from "react-toastify";
 import { useCheckUserQuery } from "./services/user/userApi";
 
@@ -44,7 +42,6 @@ const App = () => {
             <Route path="/myOrders" element={<MyOrders />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/search-results" element={<Search />} />
-            <Route path="/product/payment" element={<Transaction />} />
             <Route path="/profile" element={<Profile />} />
             // admin routes
           </Route>
@@ -53,7 +50,7 @@ const App = () => {
             <Route path="products" element={<Products />} />
             <Route path="customers" element={<Customers />} />
             <Route path="orders" element={<Order />} />
-            <Route path="form" element={<ProductFormWrapper />} />
+            <Route path="product-form" element={<ProductFormWrapper />} />
             <Route path="veiwProduct/:id" element={<ViewProduct />} />
             <Route path="veiwOrder/:id" element={<ViewOrder />} />
             <Route path="veiwCustomer/:id" element={<ViewCustomer />} />

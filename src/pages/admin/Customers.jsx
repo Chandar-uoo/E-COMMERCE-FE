@@ -1,33 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Search, Eye, Edit, MoveRight, MoveLeft } from "lucide-react";
 import Loader from "../../components/Common/Loader";
-import { AdminUserThunk } from "../../store/AdminThunk/AdminUserThunk";
-import { useDispatch, useSelector } from "react-redux";
 import ErrorMessage from "../../components/Common/ErrorMessage";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import EmptyState from "../../components/Common/EmptyState";
 import usePagination from "../../hooks/usePagination";
+import { useFetchCustomersQuery } from "../../services/admin/adminCustomerApi";
 
 const Customers = () => {
   const [user, setuser] = useState("");
-  const dispatch = useDispatch();
+  const [searchParams, setsearchParams] = useSearchParams();
+
+  const page = searchParams.get("page") || "1";
+
+  const { data, isLoading, isError, error } = useFetchCustomersQuery({
+    fetchUser: user,
+    page: Number(page),
+  });
+  const { data: customers, pagination } = data || {};
   const nav = useNavigate();
-  const [_, setsearchParams] = useSearchParams();
-  const { customers, error, loading, pagination } = useSelector(
-    (state) => state.adminUserState
-  );
-  const fetchCustomers = async () => {
-    await dispatch(AdminUserThunk({ fetchUser: user }));
-    const queryString = new URLSearchParams({
-      fetchUser: user,
-      page: 1,
-    }).toString();
-    setsearchParams(queryString);
-  };
-  useEffect(() => {
-    fetchCustomers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   const veiwCustomer = async (customer) => {
     try {
       nav(`/admin/veiwCustomer/${customer._id}`, { state: { customer } });
@@ -35,38 +27,40 @@ const Customers = () => {
       console.log(err.message);
     }
   };
+  const searchUser = (text)=>{
+    setuser(text)
+    setsearchParams({fetchUser: text})
+  }
   const { nextPage, prevPage } = usePagination();
   const next = () => {
     if (pagination.hasNextPage) {
-      const updatedParams = nextPage(); // Get the updated params
-      dispatch(AdminUserThunk(updatedParams.toString()));
+      nextPage();
     }
   };
 
   const prev = () => {
     if (pagination.hasPrevPage) {
-      const updatedParams = prevPage(); // Get the updated params
-      dispatch(AdminUserThunk(updatedParams.toString()));
+      prevPage();
     }
   };
-  if (loading) return <Loader />;
-  if (error) return <ErrorMessage message={error} />;
+  if (isLoading) return <Loader />;
+  if (isError) return <ErrorMessage message={error?.message} />;
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Customers</h2>
         {/*search custome -- future */}
-        <form className="relative" onSubmit={(e)=>{
-          e.preventDefault();
-          fetchCustomers();
-        }}>
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-4 h-4"
-          />
+        <form
+          className="relative"
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-4 h-4" />
           <input
             type="text"
             value={user}
-            onChange={(e) => setuser(e.target.value)}
+            onChange={(e) => searchUser(e.target.value)}
             required
             placeholder="Search customers..."
             className="pl-10 pr-4 py-2 border border-gray-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

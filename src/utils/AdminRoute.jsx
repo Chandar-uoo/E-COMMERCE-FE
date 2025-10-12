@@ -1,27 +1,33 @@
-import { Navigate, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 import Loader from "../components/Common/Loader";
-const AdminRoute = ({ children }) => {
-  const { user, loading, error } = useSelector((state) => state.user);
-  const nav = useNavigate();
+import { useCheckUserQuery } from "../services/user/userApi";
 
-  if (error === "Session expired. Please login again.") {
-    nav("/login");
-  }
-  if (loading || !user) {
+
+const AdminRoute = ({ children }) => {
+ 
+
+  const { data: user, isError, isLoading} = useCheckUserQuery();
+
+
+
+  if (isLoading) {
     return <Loader />;
   }
 
+  if (isError) {
+    return <Navigate to="/login" replace />;
+  }
+
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   if (user.role !== "admin") {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
-  return children; // show the admin page if allowed
+  return children;
 };
 
 export default AdminRoute;

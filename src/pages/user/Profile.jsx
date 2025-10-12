@@ -20,7 +20,7 @@ export const Profile = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   const { formData, submitProfileUpdate, setFormData, isEditUserLoading } =
-    useProfileFormHooks(user);
+    useProfileFormHooks(user||{});
   const {
     submitPasswordUpdate,
     isEditPasswordLoading,

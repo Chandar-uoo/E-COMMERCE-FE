@@ -1,49 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FetchOrdersThunk } from "../../store/AdminThunk/AdminOrderThunk";
+import React, {  useState } from "react";
+
 import Loader from "../../components/Common/Loader";
 import ErrorMessage from "../../components/Common/ErrorMessage";
-import { OrderList } from "../../components/admin/OrderList";
+import { OrderList } from "../../components/admin/OrderComonents/OrderList";
 import EmptyState from "../../components/Common/EmptyState";
 import usePagination from "../../hooks/usePagination";
 import { useSearchParams } from "react-router-dom";
 import { MoveRight, MoveLeft } from "lucide-react";
+import { useFetchOrdersQuery } from "../../services/admin/adminOrdersApi";
 
 const Order = () => {
-  const { orders, loading, error, pagination } = useSelector(
-    (state) => state.adminOrderState
-  );
-  const dispatch = useDispatch();
   const [status, setstatus] = useState("all");
-  const [_, setsearchParams] = useSearchParams();
-  
-  const fetchOrders = async () => {
-    await dispatch(FetchOrdersThunk({ orderStatus: status }));
-    const queryString = new URLSearchParams({
-      orderStatus: status,
-      page: 1,
-    }).toString();
-    setsearchParams(queryString);
-  };
-  useEffect(() => {
-    fetchOrders();
-  }, [status]);
+  const [searchParams,_] = useSearchParams();
+   const page = searchParams.get("page") || "1";
+
+  const {
+    data: result,
+    isLoading,
+    isError,
+    error,
+  } = useFetchOrdersQuery({ orderStatus: status,page: Number(page),
+ });
+  const { data: orders, pagination } = result || {};
+
   const { nextPage, prevPage } = usePagination();
+
   const next = () => {
     if (pagination.hasNextPage) {
-      const updatedParams = nextPage(); // Get the updated params
-      dispatch(FetchOrdersThunk(updatedParams.toString()));
+      nextPage();
     }
   };
 
   const prev = () => {
     if (pagination.hasPrevPage) {
-      const updatedParams = prevPage(); // Get the updated params
-      dispatch(FetchOrdersThunk(updatedParams.toString()));
+      prevPage();
     }
   };
-  if (loading) return <Loader />;
-  if (error) return <ErrorMessage message={error} />;
+  if (isLoading) return <Loader />;
+  if (isError) return <ErrorMessage message={error?.message} />;
 
   return (
     <div className="space-y-6">
@@ -60,7 +54,7 @@ const Order = () => {
             <option value="processing">Processing</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
-            <option value="failed">Delivered</option>
+            <option value="failed">Failed</option>
           </select>
         </div>
       </div>

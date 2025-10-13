@@ -37,11 +37,11 @@ export const ProductCard = ({product,viewProduct}) => {
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-2">
                       <span className="text-lg font-bold text-green-600">
-                        ${product.price}
+                        ₹{product.price}
                       </span>
                       {product.originalPrice && (
                         <span className="text-sm text-gray-400 line-through">
-                          ${product.originalPrice}
+                         ₹{product.originalPrice}
                         </span>
                       )}
                     </div>

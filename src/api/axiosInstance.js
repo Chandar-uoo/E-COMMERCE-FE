@@ -93,7 +93,7 @@ axiosInstance.interceptors.response.use(
       });
     }
     // 5. ❌ Backend validation errors (400 or 422)
-    if ([400, 401, 403, 422].includes(error.response.status)) {
+    if ([400, 401, 403, 422,409].includes(error.response.status)) {
       return Promise.reject({
         message: error.response.data.message || "Validation failed.",
         status: error.response.status,

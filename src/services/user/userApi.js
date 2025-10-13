@@ -38,12 +38,12 @@ export const userApi = createApi({
         body: email,
       }),
       transformResponse: (res) => res.success,
-    }), // mot good { em/; em}
+    }), 
 
     otpEmailVerify: builder.mutation({
       query: (data) => ({ url: "/verify-otp", method: "POST", body: data }),
       transformResponse: (res) => res.success,
-    }), // mot good { em/; em}
+    }), 
   }),
 });
 

@@ -7,7 +7,7 @@ export const productApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: "/product" }),
   endpoints: (builder) => ({
     getProduct: builder.query({ query: (id) => ({ url: `/${id}`, method: "GET" }),transformResponse: (response) => response.result, providesTags:["singleProduct"]}),
-    getAllProducts: builder.query({ query: () => ({ url: "/", method: "GET" }),transformResponse: (response) => response.result, }),
+    getAllProducts: builder.query({ query: () => ({ url: "/", method: "GET" }),transformResponse: (response) => response.result,providesTags:["Products"] }),
     searchProduct: builder.query({ query: (query) => ({ url: `/search-product?${query}`,method: "GET", }),transformResponse: (response) => response.result }),
      postReview: builder.mutation({
       query: ({ id, comment, rating }) => ({

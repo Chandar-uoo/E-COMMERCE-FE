@@ -44,7 +44,6 @@ const NavBar = () => {
     dispatch(userApi.util.resetApiState());
     dispatch(cartApi.util.resetApiState());
     dispatch(orderApi.util.resetApiState());
-    console.log(tokenService.get());
     setshowCustomToast(true);
   };
 

@@ -28,6 +28,8 @@ export const OrderList = ({ order }) => {
       console.log(err.message);
     }
   };
+  // not update conition
+  const notUpdateStatusOn = order.orderStatus !== "shipped"&&order.paymentStatus !== "unpaid";
   return (
     <tr>
       <CustomToast
@@ -54,7 +56,7 @@ export const OrderList = ({ order }) => {
           <button className="text-blue-600 hover:text-blue-800">
             <Eye onClick={() => veiwOrder(order)} className="w-4 h-4" />
           </button>
-          {order.orderStatus !== "shipped" && (
+          {notUpdateStatusOn && (
             <button
               onClick={() => setshowCustomToast(true)}
               className="text-green-600 hover:text-green-800"

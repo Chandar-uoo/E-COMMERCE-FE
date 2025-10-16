@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Search, Eye, Edit, MoveRight, MoveLeft } from "lucide-react";
 import Loader from "../../components/Common/Loader";
-import ErrorMessage from "../../components/Common/ErrorMessage";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import EmptyState from "../../components/Common/EmptyState";
 import usePagination from "../../hooks/usePagination";
 import { useFetchCustomersQuery } from "../../services/admin/adminCustomerApi";
+import { toast } from "react-toastify";
 
 const Customers = () => {
   const [user, setuser] = useState("");
@@ -44,7 +44,7 @@ const Customers = () => {
     }
   };
   if (isLoading) return <Loader />;
-  if (isError) return <ErrorMessage message={error?.message} />;
+  if (isError) toast.error(error?.message) ;
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -111,7 +111,7 @@ const Customers = () => {
               ) : (
                 <tr>
                   <td colSpan="7" className="text-center">
-                    <EmptyState message="No orders found" />
+                    <EmptyState message="No users found" />
                   </td>
                 </tr>
               )}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Loader from "../../components/Common/Loader";
 import { User, Lock } from "lucide-react";
 import {
-  useCheckUserQuery,
   usePasswordUpdateMutation,
 } from "../../services/user/userApi";
 import { PersonalInfo } from "../../components/user/ProfileComponents/PersonalInfo";
@@ -12,15 +11,14 @@ import useProfileFormHooks from "../../hooks/ProfileHooks/useProfileFormHooks";
 import { PasswordForm } from "../../components/user/ProfileComponents/PasswordForm";
 import { ProfileForm } from "../../components/user/ProfileComponents/ProfileForm";
 export const Profile = () => {
-  const { data: user, isLoading: isCheckuserLoading } = useCheckUserQuery();
   usePasswordUpdateMutation();
   const [editProfile, setEditProfile] = useState(false);
   const [editPasswords, setEditPasswords] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  const { formData, submitProfileUpdate, setFormData, isEditUserLoading } =
-    useProfileFormHooks(user||{});
+  const { formData, submitProfileUpdate, setFormData, isEditUserLoading,isCheckuserLoading,user } =
+    useProfileFormHooks();
   const {
     submitPasswordUpdate,
     isEditPasswordLoading,

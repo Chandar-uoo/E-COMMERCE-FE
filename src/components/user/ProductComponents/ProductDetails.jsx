@@ -114,7 +114,7 @@ export const ProductDetails = ({item,calculateAverageRating,decrementQuantity,qu
                 <div className="space-y-3">
                   <button
                     onClick={handleAddToCart}
-                    disabled={isCartLoading}
+                    disabled={isCartLoading || item.availabilityStatus == "Discontinued"}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isCartLoading ? "Adding to Cart..." : "Add to Cart"}
@@ -122,7 +122,7 @@ export const ProductDetails = ({item,calculateAverageRating,decrementQuantity,qu
 
                   <button
                     onClick={()=>orderProduct(item._id)}
-                    disabled={isOrderLoading || item.stock < quantity}
+                    disabled={isOrderLoading || item.stock < quantity ||item.availabilityStatus == "Discontinued"}
                     className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isOrderLoading ? "Processing..." : "Buy Now"}

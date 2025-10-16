@@ -13,8 +13,6 @@ export const OrderList = ({ order }) => {
 
   const updateStatus = async () => {
     try {
-      console.log(order._id);
-
       await updateOrderStatus(order._id).unwrap();
       toast.success("order status has been updated");
     } catch (err) {

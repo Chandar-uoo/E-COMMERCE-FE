@@ -61,7 +61,7 @@ function useAdminProductFormHooks({ isUpdate, initialData }) {
 
       nav("/admin/products");
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err?.message);
       console.error(err);
     }
   };

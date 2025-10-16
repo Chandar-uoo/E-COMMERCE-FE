@@ -9,7 +9,7 @@ const Cart = () => {
   const {
     isCartLoading,
     isCartError,
-    clearCart,
+    handleCartClear,
     deliveryCharge,
     subtotal,
     cartError,
@@ -26,7 +26,7 @@ const Cart = () => {
     const { success } = await process(itemsToOrder);
 
     if (success) {
-      clearCart();
+      handleCartClear();
     }
   };
 

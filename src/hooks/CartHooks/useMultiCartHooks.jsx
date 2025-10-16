@@ -32,10 +32,17 @@ function useMultiCartHooks() {
     return Number((subtotal + deliveryCharge).toFixed(2));
   }, [subtotal, deliveryCharge]);
 
+  const handleCartClear = async () => {
+    try {
+      await clearCart().unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     isCartLoading,
     isCartError,
-    clearCart,
+    handleCartClear,
     deliveryCharge,
     subtotal,
     cartError,

@@ -5,7 +5,7 @@ import { usePostReviewMutation } from "../../services/user/productApi";
 function useReveiwHooks({item}) {
   
     const {data:user} = useCheckUserQuery();
-     const [reviews,_] = useState(item.reviews ?? []);
+     const reviews = item.reviews ?? []
   const [newReview, setNewReview] = useState({
     rating: 5,
     comment: "",

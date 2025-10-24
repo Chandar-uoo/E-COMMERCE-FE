@@ -7,25 +7,40 @@ import { ProductPriceInventory } from "./ProductFormComponents/ProductPriceInvet
 const ProductForm = ({ isUpdate, setFormData, formData, handleSubmit, addLoading,updateLoading }) => {
   const nav = useNavigate();
 
-  const handleChange = (key) => (e) => {
-    let value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    if (key === "images") {
-      value = value.split(",").map((url) => url.trim()); // split by comma
-    }
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
-  const handleNestedChange = (parentKey, childKey) => (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      [parentKey]: {
-        ...prev[parentKey],
-        [childKey]: value,
-      },
-    }));
-  };
+const handleChange = (key) => (e) => {
+  let value =
+    e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+  if (typeof value === "string") {
+    value = value.trim(); // Trim whitespace for text inputs
+  }
+
+  if (key === "images") {
+    value = value
+      .split(",")
+      .map((url) => url.trim()); // Trim each URL in the array
+  }
+
+  setFormData((prev) => ({ ...prev, [key]: value }));
+};
+
+const handleNestedChange = (parentKey, childKey) => (e) => {
+  let value =
+    e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+  if (typeof value === "string") {
+    value = value.trim(); // Trim whitespace for nested text inputs
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [parentKey]: {
+      ...prev[parentKey],
+      [childKey]: value,
+    },
+  }));
+};
+
 
 
   return (

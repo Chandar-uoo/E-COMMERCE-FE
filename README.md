@@ -1,112 +1,192 @@
+
+
 # 🛒 RetailX — E-Commerce Frontend (React + Redux Toolkit)
 
-A fully functional frontend for an e-commerce application with authentication, cart, admin dashboard, and order handling — built for scalability and real-world workflows.
+
+## 🎯 Overview
+
+**RetailX** is a production-ready **React + Redux Toolkit** e-commerce frontend that connects to a Node.js + MongoDB backend.
+It includes complete **user, admin, and analytics functionality**, secure authentication, **Razorpay payment integration**, and **email-based signup verification**.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-## 🚀 Features  
+### 🧑‍💻 User Features
 
-- 🔐 User Authentication (Login, Signup, JWT, Refresh Tokens)  
-- ✉️ Email System  
-  - OTP Verification on Signup  
-  - Payment Proof / Order Confirmation Emails  
-- 🛍️ Product Listing with Cart (Add, Update, Remove)  
-- 🗂️ Product Category Filters  
-- 💳 Order Placement & Payments  
-- 🧑‍💼 Admin Dashboard with:  
-  - Product Management (CRUD)  
-  - Order Updation  
-  - User Management + Search  
-- 🔍 Advanced Controls (Filtering / Sorting / Search)  
-- 📑 Pagination for Products, Orders, and Users  
-- 📦 Role-based Access Control (RBAC)  
-- 🔁 Persistent Redux State  
-- 🌐 Axios Interceptors + Token Refresh  
-- ⚠️ Error + Loading States  
+* 🔐 **Authentication**
 
+  * Signup with email verification (OTP)
+  * Login with JWT + refresh token
+  * Forgot/Reset password flow
 
-## 🧪 Tech Stack
+* 🛍️ **Product Management**
 
-- React 19
-- Redux Toolkit
-- Tailwind CSS + Daisy UI
-- React Router DOM
-- Axios (with interceptors)
-- Lucide React Icons
+  * View all products with pagination
+  * Filter by category, brand, price, and tags
+  * Full-text search using MongoDB text indexes
+  * Sort by name, price, or popularity
+
+* 🛒 **Cart & Checkout**
+
+  * Add, update, or remove products
+  * Auto-calculated totals and quantity sync
+  * Persistent cart with Redux Toolkit
+  * **Secure Razorpay payment integration** for orders
+
+* 💳 **Orders**
+
+  * Place orders after successful payment
+  * View order history with status updates
+  * Real-time payment confirmation via Razorpay
 
 ---
 
-## 📂 Project Structure
+### 👨‍💼 Admin Features
 
+* 🧭 **Dashboard Overview**
+
+  * Displays analytics data from backend aggregation:
+
+     * Total active products
+     * top 3 selling products
+     * Total revenue from completed orders
+     * Orders awaiting processing
+     * Registered user count
+
+* 📦 **Product Management**
+
+  * Create, edit, delete products
+  * Manage stock, price, category, and tags
+
+* 🧾 **Order Management**
+
+  * Track order status and payment confirmation
+  * Update shipping status
+
+* 👥 **User Management**
+
+  * View all users
+  * Role-based access control (Admin/User)
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology                 | Purpose                        |
+| -------------------------- | ------------------------------ |
+| **React 19**               | Frontend library               |
+| **Redux Toolkit**          | State management               |
+| **React Router DOM**       | Routing                        |
+| **Axios**                  | API handling with interceptors |
+| **Tailwind CSS + DaisyUI** | Styling and UI                 |
+| **Lucide React**           | Icons                          |
+| **Vite**                   | Development and build tool     |
+
+---
+
+## 📁 Project Structure
+
+```
 src/
-│
-├── api/ # Axios services for products, cart, auth, orders
-├── assets/ # images
-├── components/ # Reusable UI components
-├── layout/ # Page layouts and wrappers
-├── pages/ # Page-level components (Login, AdminPanel, etc.)
-├── store/ # Redux setup (slices, thunks)
-├── utils/ # Config and helpers
-├── App.jsx # Main component with route definitions
-└── main.jsx # Entry point
+├── api/              # Axios instances & services
+├── assets/           # Images and static files
+├── components/       # Reusable UI components
+├── layout/           # Layout wrappers for user/admin
+├── pages/            # Route-based pages
+├── store/            # Redux slices and configuration
+├── utils/            # Token services, config, helpers
+├── App.jsx           # Route setup
+└── main.jsx          # App entry point
+```
 
 ---
 
----
-
-## 🛠️ Setup Instructions
+## ⚙️ Setup Instructions
 
 ```bash
+# 1️⃣ Clone repo
 git clone https://github.com/Chandar-uoo/E-COMMERCE-FE.git
 cd E-COMMERCE-FE
 
-# 🔧 Setup .env file
-Create a `.env` file in the root directory:
+# 2️⃣ Create .env file
 VITE_API_URL="http://localhost:3000/api"
 
-# 📦 Install dependencies
+# 3️⃣ Install dependencies
 npm install
 
-# 🚀 Start frontend
+# 4️⃣ Run development server
 npm run dev
+```
+
+---
+
+## 🧩 Architecture Overview
+
+**Frontend Flow**
+
+```
+Component → Redux Slice → Axios Service → REST API → MongoDB Backend
+```
+
+* Centralized API layer for maintainability
+* Interceptors auto-attach JWT and refresh tokens
+* Redux Toolkit handles caching and global state
+* Token refresh handled automatically on 401 responses
+
+
+
+## 🔐 Authentication Flow
+
+```mermaid
+sequenceDiagram
+    User->>Frontend: Enters signup details
+    Frontend->>API: POST /auth/signup
+    API->>User: Sends verification email with OTP
+    User->>Frontend: Enters OTP
+    Frontend->>API: POST /auth/verify-otp
+    API->>Frontend: Returns JWT + Refresh Token
+    Frontend->>Redux: Stores token
+    Axios->>Interceptor: Attaches token for future requests
+```
+
+✅ Includes **email OTP verification** during signup
+✅ JWT tokens + auto-refresh for secure sessions
+✅ Tokens handled in memory (no localStorage leaks)
 
 ---
 
 
-## 📌 Version
 
-Current Version: `v1.2.0` (MVP)
+## ⚡ Performance
 
-- Status: ✅ Stable / Working
-- Last Updated: August 2025
+* 🚀 **Vite** for ultra-fast dev server & optimized builds
+* 🧠 **RTK Query caching** to prevent redundant requests
+* 🔄 **Axios interceptors** for clean API handling
 
-> This is the third stable version of the project with core features implemented (cart, orders, admin panel, auth, etc.).
+---
 
-## 🚧 Planned Features / Future Updates
+## 🧾 Version
 
-These are features that are planned for future versions:
-
-
-- [ ] ✅ Integrate **payment gateway** (Stripe or Razorpay)
-- [ ] 🔐 Add **email verification** on sign up
+| Version              | Status   | Highlights                                             |
+| -------------------- | -------- | ------------------------------------------------------ |
+| **v1.3.0**           | ✅ Stable | Razorpay + Email Signup Verification + Admin Analytics |
 
 
 
-> Contributions welcome! Feel free to fork and improve.
-
-
+---
 
 ## 👤 Author
 
-Chandru V
+**Chandru V**
+💻 GitHub: [@Chandar-uoo](https://github.com/Chandar-uoo)
+📧 Email: [chandruofficial666@gmail.com](mailto:chandruofficial666@gmail.com)
+💼 Portfolio: Coming Soon
 
-💼 Portfolio: (Coming soon)
+---
 
-📧 Email: chandruofficial666@gmail.com
 
-💻 GitHub: Chandar-uoo
 
-Feel free to reach out for feedback, questions, or collaboration!
-```
+⭐ *Star this repo if you found it helpful!*
+Made with ❤️ by **Chandru V**
+

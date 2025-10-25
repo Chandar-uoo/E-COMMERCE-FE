@@ -19,6 +19,7 @@ export const ProductAdditionalInfo = ({ formData, handleChange }) => {
               type="text"
               placeholder="electronics, gadgets, tech (comma separated)"
               value={formData.tags}
+              required
               onChange={handleChange("tags")}
               className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
@@ -34,6 +35,7 @@ export const ProductAdditionalInfo = ({ formData, handleChange }) => {
               value={formData.warrantyInformation}
               onChange={handleChange("warrantyInformation")}
               rows={2}
+              required
               className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
             />
           </div>
@@ -48,6 +50,7 @@ export const ProductAdditionalInfo = ({ formData, handleChange }) => {
               value={formData.shippingInformation}
               onChange={handleChange("shippingInformation")}
               rows={2}
+              required
               className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
             />
           </div>
@@ -62,6 +65,7 @@ export const ProductAdditionalInfo = ({ formData, handleChange }) => {
               value={formData.returnPolicy}
               onChange={handleChange("returnPolicy")}
               rows={2}
+              required
               className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
             />
           </div>

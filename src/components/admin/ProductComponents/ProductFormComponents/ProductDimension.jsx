@@ -18,6 +18,7 @@ export const ProductDimension = ({ formData,handleNestedChange }) => {
             <input
               type="number"
               step="0.1"
+              min={0}
               placeholder="0.0"
               value={formData.dimensions.width}
               onChange={ handleNestedChange("dimensions", "width")}
@@ -34,6 +35,7 @@ export const ProductDimension = ({ formData,handleNestedChange }) => {
             <input
               type="number"
               step="0.1"
+              min={0}
               placeholder="0.0"
               value={formData.dimensions.height}
               onChange={ handleNestedChange("dimensions", "height")}
@@ -50,6 +52,7 @@ export const ProductDimension = ({ formData,handleNestedChange }) => {
             <input
               type="number"
               step="0.1"
+              min={0}
               placeholder="0.0"
               value={formData.dimensions.depth}
               onChange={ handleNestedChange("dimensions", "depth")}

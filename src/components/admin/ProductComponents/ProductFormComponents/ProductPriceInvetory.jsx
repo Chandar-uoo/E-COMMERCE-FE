@@ -13,11 +13,12 @@ export const ProductPriceInventory = ({ formData, handleChange }) => {
           {/* Price */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Price ($)
+              Price (₹)
             </label>
             <input
               type="number"
               step="0.01"
+              min={0}
               placeholder="0.00"
               value={formData.price}
               onChange={handleChange("price")}
@@ -34,6 +35,7 @@ export const ProductPriceInventory = ({ formData, handleChange }) => {
             <input
               type="number"
               placeholder="0"
+              min={0}
               value={formData.stock}
               onChange={handleChange("stock")}
               className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
@@ -49,6 +51,7 @@ export const ProductPriceInventory = ({ formData, handleChange }) => {
             <input
               type="number"
               step="0.1"
+              min={0}
               placeholder="0.0"
               value={formData.weight}
               onChange={handleChange("weight")}

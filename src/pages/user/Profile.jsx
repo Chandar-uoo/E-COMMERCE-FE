@@ -32,7 +32,9 @@ export const Profile = () => {
     if (success) {
       setEditProfile(false);
     } else {
-      setErrors({ general: error });
+      console.log(error);
+      
+      setErrors({ general: error.message });
     }
   };
   const handlePasswordUpdate = async () => {
@@ -45,7 +47,7 @@ export const Profile = () => {
       setErrors(error);
     } else {
       // String or API error
-      setErrors({ general: error || "Something went wrong" });
+      setErrors({ general: error.message || "Something went wrong" });
     }
   };
 

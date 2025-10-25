@@ -19,24 +19,24 @@ export const DateUtils = {
 
  export const validateForm = (formData) => {
     const newErrors = {};
-    if (!formData.name?.trim()) newErrors.name = "Name is required";
-    if (!formData.phoneNo?.trim()) newErrors.phoneNo = "Phone number is required";
+    if (!formData.name?.trim()) newErrors.message = "Name is required";
+    if (!formData.phoneNo?.trim()) newErrors.message= "Phone number is required";
     else if (!/^\d{10}$/.test(formData.phoneNo.replace(/\D/g, "")))
-      newErrors.phoneNo = "Please enter a valid 10-digit phone number";
-    if (!formData.address?.trim()) newErrors.address = "Address is required";
-    if (!formData.DOB) newErrors.DOB = "Date of birth is required";
-    if (!formData.image) newErrors.image = "Image URL is required";
+      newErrors.message = "Please enter a valid 10-digit phone number";
+    if (!formData.address?.trim()) newErrors.message = "Address is required";
+    if (!formData.DOB) newErrors.message = "Date of birth is required";
+    if (!formData.image) newErrors.message = "Image URL is required";
     return newErrors;
   };
 
   export const validatePassword = (passwords) => {
       const newErrors = {};
-      if (!passwords.oldPassword) newErrors.oldPassword = "Current password is required";
-      if (!passwords.newPassword) newErrors.newPassword = "New password is required";
+      if (!passwords.oldPassword) newErrors.message = "Current password is required";
+      if (!passwords.newPassword) newErrors.message = "New password is required";
       else if (passwords.newPassword.length < 6)
-        newErrors.newPassword = "Password must be at least 6 characters";
+        newErrors.message = "Password must be at least 6 characters";
       if (passwords.newPassword !== passwords.confirmPassword)
-        newErrors.confirmPassword = "Passwords do not match";
+        newErrors.message = "Passwords do not match";
       return newErrors;
     };
 

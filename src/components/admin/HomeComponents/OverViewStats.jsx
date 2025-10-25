@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShoppingCart, Users, DollarSign, Package } from "lucide-react";
+import {  Users,  Package, IndianRupee } from "lucide-react";
 
 export const OverViewStats = ({
   totalProducts,
@@ -35,7 +35,7 @@ export const OverViewStats = ({
         {/* Total Revenue */}
         <div className="bg-white rounded-xl shadow p-6 flex items-center space-x-4 border border-yellow-100">
           <div className="bg-yellow-100 p-2 rounded-full">
-            <DollarSign className="w-6 h-6 text-yellow-600" />
+            <IndianRupee className="w-6 h-6 text-yellow-600" />
           </div>
           <div>
             <p className="text-gray-500 text-sm">Total Revenue</p>

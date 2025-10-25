@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../services/auth/authApi";
 import { tokenService } from "../../utils/tokenService";
+import { toast } from "react-toastify";
 
 function useSignUpHook() {
   const nav = useNavigate();
@@ -23,6 +24,7 @@ function useSignUpHook() {
     try {
       const res = await signup(formData).unwrap();
       tokenService.set(res.token);
+      toast.success("Sign up  successfull")
       nav("/");
     } catch (error) {
       seterror(error.message);

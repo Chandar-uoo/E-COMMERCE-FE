@@ -8,6 +8,9 @@ function useAdminSingleProduct() {
 
   const handleDeleteProduct = async (id) => {
     try {
+      if(import.meta.env.VITE_ADMIN_ACCESS==="DEMO") {
+           return toast.success("DEMO MODE : certain actions are restrcted")
+        }
       await deleteItem(id).unwrap();
       toast.success("product marked as deleted ")
     } catch (error) {

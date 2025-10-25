@@ -11,8 +11,12 @@ export const OrderList = ({ order }) => {
   const [showCustomToast, setshowCustomToast] = useState(false);
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
 
+
   const updateStatus = async () => {
     try {
+      if(import.meta.env.VITE_ADMIN_ACCESS==="DEMO") {
+           return toast.success("DEMO MODE : certain actions are restrcted")
+        }
       await updateOrderStatus(order._id).unwrap();
       toast.success("order status has been updated");
     } catch (err) {

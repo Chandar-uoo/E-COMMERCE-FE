@@ -49,6 +49,10 @@ function useAdminProductFormHooks({ isUpdate, initialData }) {
       },
     };
     try {
+        if(import.meta.env.VITE_ADMIN_ACCESS==="DEMO") {
+           nav("/admin/products");
+           return toast.success("DEMO MODE : certain actions are restrcted")
+        }
       if (isUpdate) {
         await updateProduct({
           id: initialData._id,

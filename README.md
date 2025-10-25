@@ -9,6 +9,16 @@
 It includes complete **user, admin, and analytics functionality**, secure authentication, **Razorpay payment integration**, and **email-based signup verification**.
 
 ---
+# for access
+
+# USER
+ * E-MAIL:chandru666@gmail.com
+ * PASSWORD:Chandru124 
+# ADMIN  
+ * E-MAIL: admin666@gmail.com
+ * PASSWORD :Admin123
+
+ FOR SAFTEY REASON CERTAIN ACTIONS FOR ADMIN ARE RESTRICTED
 
 ## ✨ Features
 
